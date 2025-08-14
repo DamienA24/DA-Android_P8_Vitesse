@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Vitesse</string>
+    <string name="empty_state">Aucun candidat</string>
+    <string name="all_candidates_tab">Tous</string>
+    <string name="favorite_candidates_tab">Favoris</string>
+    <string name="filter_candidates">Rechercher un candidat</string>
+    <string name="add_candidate">Ajouter un candidat</string>
+    <string name="first_name">Prénom</string>
+    <string name="last_name">Nom</string>
+    <string name="phone_number">Téléphone</string>
+    <string name="email">Email</string>
+    <string name="salary">rétentions salariales</string>
+    <string name="notes">Notes</string>
+    <string name="save">Sauvegarder</string>
+    <string name="mandatory_field">Champ obligatoire</string>
+    <string name="invalid_format">Format invalide</string>
+    <string name="edit">Modifier</string>
+    <string name="delete">Supprimer</string>
+    <string name="dialog_title_delete">Suppression</string>
+    <string name="dialog_text_delete">Etes-vous sûr de vouloir supprimer ce candidat? Cette action est irréversible.</string>
+    <string name="dialog_button_cancel">Annuler</string>
+    <string name="dialog_button_confirm">Confirmer</string>
+    <string name="call_label">Appel</string>
+    <string name="sms_label">SMS</string>
+    <string name="email_label">E-mail</string>
+    <string name="about_title">A propos</string>
+    <string name="about_age">ans</string>
+    <string name="title_edit_candidate">Modifier un candidat</string>
+</resources>
