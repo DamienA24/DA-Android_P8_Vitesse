@@ -27,4 +27,6 @@
     <string name="about_title">A propos</string>
     <string name="about_age">ans</string>
     <string name="title_edit_candidate">Modifier un candidat</string>
+    <string name="error_loading_app">Erreur lors du chargement de l\'application</string>
+    <string name="retry">Réessayer</string>
 </resources>

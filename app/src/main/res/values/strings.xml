@@ -28,4 +28,6 @@
     <string name="salary_currency_eur" translatable="false">soit €</string>
     <string name="salary_currency_gbp" translatable="false">or £</string>
     <string name="title_edit_candidate">Edit a candidate</string>
+    <string name="error_loading_app">Error loading application</string>
+    <string name="retry">Retry</string>
 </resources>
