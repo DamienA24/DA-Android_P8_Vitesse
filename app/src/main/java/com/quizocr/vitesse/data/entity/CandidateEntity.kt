@@ -3,10 +3,10 @@ package com.quizocr.vitesse.data.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.sql.Date
+import java.time.LocalDate
 
 @Entity(tableName = "candidates")
-data class Candidate(
+data class CandidateEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Int = 0,
@@ -27,7 +27,7 @@ data class Candidate(
     val email: String,
 
     @ColumnInfo(name = "date_of_birth")
-    val dateOfBirth: Date,
+    val dateOfBirth: LocalDate,
 
     @ColumnInfo(name = "salary_euros")
     val salaryEuros: Double,

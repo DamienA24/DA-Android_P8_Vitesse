@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.room.common.jvm)
+    implementation(libs.androidx.room.runtime.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
