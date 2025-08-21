@@ -29,4 +29,6 @@
     <string name="title_edit_candidate">Modifier un candidat</string>
     <string name="error_loading_app">Erreur lors du chargement de l\'application</string>
     <string name="retry">Réessayer</string>
+    <string name="search_candidate">Rechercher un candidat</string>
+    <string name="avatar_candidate">Avatar candidat</string>
 </resources>

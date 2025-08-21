@@ -30,4 +30,8 @@
     <string name="title_edit_candidate">Edit a candidate</string>
     <string name="error_loading_app">Error loading application</string>
     <string name="retry">Retry</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_candidate">Search candidate</string>
+    <string name="avatar_candidate">Avatar candidat</string>
 </resources>

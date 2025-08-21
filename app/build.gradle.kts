@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.quizocr.vitesse"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.quizocr.vitesse"
