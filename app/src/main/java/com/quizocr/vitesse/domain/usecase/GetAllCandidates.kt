@@ -8,6 +8,6 @@ import javax.inject.Inject
 
 class GetAllCandidates  @Inject constructor(private val candidateRepository: CandidateRepository) {
     suspend fun execute(): Flow<DataResult<List<Candidate>>> {
-        return candidateRepository.getAllCandidates()
+        return candidateRepository.allCandidates()
     }
 }

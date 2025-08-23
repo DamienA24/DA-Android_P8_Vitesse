@@ -40,21 +40,10 @@
             android:background="@color/secondary"
             app:tabIndicatorColor="@color/primary"
             app:tabTextColor="@color/colorOnSecondary"
-            >
+            />
 
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/tabItemAll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/all_candidates_tab"
-                 />
 
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/tabItemFavorites"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/favorite_candidates_tab" />
-        </com.google.android.material.tabs.TabLayout>
+
         <!--
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -76,7 +65,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:layout_margin="8dp"
-                    tools:layout="@layout/fragment_candidate_list"
+                    tools:layout="@layout/fragment_candidate"
                     />
 
 

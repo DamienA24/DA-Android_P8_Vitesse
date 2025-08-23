@@ -1,6 +1,8 @@
 package com.quizocr.vitesse.data.repository
 
+import android.util.Log
 import com.quizocr.vitesse.data.dao.CandidateDao
+import com.quizocr.vitesse.data.entity.CandidateEntity
 import com.quizocr.vitesse.domain.model.Candidate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -13,14 +15,14 @@ class CandidateRepository(private val candidateDao: CandidateDao) {
      * @return Flow of DataResult containing a list of candidates or an error.
      * @see DataResult
      */
-  suspend fun getAllCandidates(): Flow<DataResult<List<Candidate>>> {
+    suspend fun allCandidates(): Flow<DataResult<List<Candidate>>> {
         return candidateDao.getAllCandidates()
-            .map { entityList ->
-                val domainList = entityList.map { entity -> Candidate.fromEntity(entity) }
-                DataResult.Success(domainList) as DataResult<List<Candidate>>
+            .map<List<CandidateEntity>, DataResult<List<Candidate>>> { dtoList ->
+                Log.d("CandidateRepository", "Fetched candidates from database: $dtoList")
+                DataResult.Success(dtoList.map { Candidate.fromEntity(it) })
             }
             .catch { e ->
-                emit(DataResult.Error(Exception("Failed to fetch candidates from database", e)))
+                emit(DataResult.Error(Exception("Failed to fetch sleeps from database", e)))
             }
     }
 
