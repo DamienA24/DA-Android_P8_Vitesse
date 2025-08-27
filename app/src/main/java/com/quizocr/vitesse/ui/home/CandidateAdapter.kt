@@ -1,5 +1,6 @@
 package com.quizocr.vitesse.ui.home
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,9 +39,11 @@ class CandidateAdapter(
     inner class CandidateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val photoImageView: ImageView = itemView.findViewById(R.id.ivAvatar)
         private val nameTextView: TextView = itemView.findViewById(R.id.tvCandidateName)
+        private val descriptionTextView: TextView = itemView.findViewById(R.id.tvCandidateDescription)
 
         fun bind(candidate: Candidate) {
             nameTextView.text = "${candidate.firstName} ${candidate.lastName}"
+            descriptionTextView.text = candidate.notes
 
             if (!candidate.photoUri.isNullOrBlank()) {
                 // Glide.with(itemView.context)
