@@ -11,12 +11,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val getAllCandidates: GetAllCandidates) :
     ViewModel() {
+
+        private val _uiState = MutableStateFlow(CandidateUiState())
+        val uiState: StateFlow<CandidateUiState> = _uiState.asStateFlow()
+
     private val _allCandidates = MutableStateFlow<List<Candidate>>(emptyList())
     val allCandidates: StateFlow<List<Candidate>> = _allCandidates.asStateFlow()
 
@@ -25,6 +30,7 @@ class HomeViewModel @Inject constructor(private val getAllCandidates: GetAllCand
 
     fun fetchAllCandidates() {
         viewModelScope.launch {
+            _uiState.update { currentState -> currentState.copy(isLoading = true) }
             getAllCandidates.execute()
                 .catch { e ->
                     _errorMessage.value = "Unexpected error in sleep data flow: ${e.message}"
@@ -34,16 +40,25 @@ class HomeViewModel @Inject constructor(private val getAllCandidates: GetAllCand
                     when (result) {
                         is DataResult.Success -> {
                             Log.d("HomeViewModel", "Fetched all candidates: ${result.data}")
+                            _uiState.update{ currentState ->
+                                currentState.copy(isLoading = false, candidates = result.data) }
                             _allCandidates.value = result.data
                             _errorMessage.value = null
                         }
                         is DataResult.Error -> {
                             Log.e("HomeViewModel", "Failed to load all candidates", result.exception)
+                            _uiState.update { currentState ->
+                                currentState.copy(isLoading = false, errorMessage = result.exception.message)
+                            }
                             _allCandidates.value = emptyList()
                             _errorMessage.value = "Failed to load all candidates: ${result.exception.message}"
                         }
                     }
                 }
         }
+    }
+
+    fun clearErrorMessage() {
+        _uiState.update { it.copy(errorMessage = null) }
     }
 }

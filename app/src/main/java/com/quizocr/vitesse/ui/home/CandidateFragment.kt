@@ -1,12 +1,17 @@
 package com.quizocr.vitesse.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.quizocr.vitesse.databinding.FragmentCandidateBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,7 +67,7 @@ class CandidateFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
-        setupObservers()
+        observeUiState()
 
         if (viewModel.allCandidates.value.isEmpty()) {
             viewModel.fetchAllCandidates()
@@ -74,24 +79,33 @@ class CandidateFragment : Fragment() {
         binding.recyclerViewCandidates.adapter = candidateAdapter
     }
 
-    private fun setupObservers() {
+    private fun observeUiState() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.allCandidates.collect { allCandidates ->
-                val filteredCandidates = if (showFavoritesOnly) {
-                    allCandidates.filter { it.isFavorite }
-                } else {
-                    allCandidates
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    Log.d("CandidateFragment", "New UI State: isLoading=${state.isLoading}, candidates=${state.candidates.size}, error=${state.errorMessage}, showFavorites=$showFavoritesOnly")
+
+                    binding.progressBar.isVisible = state.isLoading
+
+                    val filteredCandidates = if (showFavoritesOnly) {
+                        state.candidates.filter { it.isFavorite }
+                    } else {
+                        state.candidates
+                    }
+                    candidateAdapter.updateData(filteredCandidates)
+                    Log.d("CandidateFragment", "Submitted ${filteredCandidates.size} candidates to adapter.")
+
+                    if (!state.isLoading) {
+                        binding.recyclerViewCandidates.isVisible = filteredCandidates.isNotEmpty()
+                    } else {
+                        binding.recyclerViewCandidates.isVisible = false
+                    }
+                    state.errorMessage?.let { message ->
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+                        viewModel.clearErrorMessage()
+                    }
                 }
-
-                candidateAdapter.updateData(filteredCandidates)
             }
-        }
-
-        // Observer le loading state
-        viewLifecycleOwner.lifecycleScope.launch {
-           // viewModel.isLoading.collect { isLoading ->
-             //   binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-            // }
         }
     }
 
@@ -100,3 +114,4 @@ class CandidateFragment : Fragment() {
         _binding = null
     }
 }
+

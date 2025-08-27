@@ -67,9 +67,6 @@
                     android:layout_margin="8dp"
                     tools:layout="@layout/fragment_candidate"
                     />
-
-
-
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
