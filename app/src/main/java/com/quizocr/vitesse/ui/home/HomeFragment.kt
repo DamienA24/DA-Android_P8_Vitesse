@@ -1,10 +1,12 @@
 package com.quizocr.vitesse.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
@@ -17,8 +19,7 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,6 +35,7 @@ class HomeFragment : Fragment() {
         setupViewPager()
         setupFloatingActionButton()
         setupSearchField()
+        viewModel.fetchAllCandidatesIfNeeded()
     }
 
     private fun setupViewPager() {
@@ -57,9 +59,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupSearchField() {
-        binding.outlinedTextField.setEndIconOnClickListener {
-            val searchQuery = binding.outlinedTextField.editText?.text?.toString() ?: ""
-            // TODO: Implémenter la recherche
+        binding.inputSeachCandidate.setEndIconOnClickListener {
+            val searchQuery = binding.inputSeachCandidate.editText?.text?.toString() ?: ""
+            Log.d("HomeFragment", "Search query: $searchQuery")
+            viewModel.setSearchQuery(searchQuery)
         }
     }
 
