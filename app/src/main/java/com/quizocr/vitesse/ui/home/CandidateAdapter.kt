@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.quizocr.vitesse.R
 import com.quizocr.vitesse.data.entity.CandidateEntity
 import com.quizocr.vitesse.domain.model.Candidate
@@ -46,9 +47,11 @@ class CandidateAdapter(
             descriptionTextView.text = candidate.notes
 
             if (!candidate.photoUri.isNullOrBlank()) {
-                // Glide.with(itemView.context)
-
-                photoImageView.setImageResource(R.drawable.ic_android_black_24dp)
+                Glide.with(itemView.context)
+                    .load(candidate.photoUri)
+                    .placeholder(R.drawable.ic_android_black_24dp)
+                    .error(R.drawable.ic_android_black_24dp)
+                    .into(photoImageView)
             } else {
                 photoImageView.setImageResource(R.drawable.ic_android_black_24dp)
             }

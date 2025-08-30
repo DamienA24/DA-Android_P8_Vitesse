@@ -19,11 +19,11 @@
             >
             <ImageView
                 android:id="@+id/ivAvatar"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_android_black_24dp"
-                android:contentDescription="@string/avatar_candidate" />
+                android:contentDescription="@string/avatar_candidate"
+                tools:src="@drawable/ic_android_black_24dp"/>
 
         </androidx.cardview.widget.CardView>
 

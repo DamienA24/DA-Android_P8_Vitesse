@@ -65,7 +65,7 @@ abstract class AppDatabase : RoomDatabase() {
         suspend fun populateDatabase(candidateDao: CandidateDao) {
             candidateDao.insertCandidate(
                 CandidateEntity(
-                    photoUri = "", // ou votre URI
+                    photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/17.jpg", // ou votre URI
                     firstName = "John",
                     lastName = "Doe",
                     phoneNumber = "1234567890",
@@ -79,7 +79,7 @@ abstract class AppDatabase : RoomDatabase() {
 
             candidateDao.insertCandidate(
                 CandidateEntity(
-                    photoUri = "", // ou votre URI
+                    photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/72.jpg", // ou votre URI
                     firstName = "John",
                     lastName = "Wick",
                     phoneNumber = "1234567890",
@@ -93,7 +93,7 @@ abstract class AppDatabase : RoomDatabase() {
 
             candidateDao.insertCandidate(
                 CandidateEntity(
-                    photoUri = "", // ou votre URI
+                    photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/19.jpg", // ou votre URI
                     firstName = "bob",
                     lastName = "commando",
                     phoneNumber = "1234567890",

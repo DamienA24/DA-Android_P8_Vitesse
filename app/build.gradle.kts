@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.paging)
     implementation(libs.dagger.hilt.android)
+    implementation(libs.glide)
     kapt(libs.androidx.room.compiler)
     kapt(libs.dagger.hilt.compiler)
     testImplementation(libs.junit)
