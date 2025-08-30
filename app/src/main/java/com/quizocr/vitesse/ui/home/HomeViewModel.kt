@@ -7,57 +7,93 @@ import com.quizocr.vitesse.data.repository.DataResult
 import com.quizocr.vitesse.domain.model.Candidate
 import com.quizocr.vitesse.domain.usecase.GetAllCandidates
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.text.contains
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val getAllCandidates: GetAllCandidates) :
     ViewModel() {
 
-        private val _uiState = MutableStateFlow(CandidateUiState())
-        val uiState: StateFlow<CandidateUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(CandidateUiState())
+    val uiState: StateFlow<CandidateUiState> = _uiState.asStateFlow()
 
-    private val _allCandidates = MutableStateFlow<List<Candidate>>(emptyList())
-    val allCandidates: StateFlow<List<Candidate>> = _allCandidates.asStateFlow()
+    private val _sourceCandidates = MutableStateFlow<List<Candidate>>(emptyList())
+    private val _searchQuery = MutableStateFlow("")
 
-    private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
+    init {
+        viewModelScope.launch {
+            combine(_sourceCandidates, _searchQuery) { sourceList, query ->
+                val filteredList = if (query.isBlank()) {
+                    sourceList
+                } else {
+                    sourceList.filter { candidate ->
+                        candidate.firstName.contains(query, ignoreCase = true) || candidate.lastName.contains(query, ignoreCase = true)
+                    }
+                }
+                Pair(filteredList, query)
+            }.collect { (filteredList, query) ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        candidates = filteredList,
+                        searchQuery = query
+                    )
+
+                }
+            }
+        }
+    }
 
     fun fetchAllCandidates() {
         viewModelScope.launch {
             _uiState.update { currentState -> currentState.copy(isLoading = true) }
             getAllCandidates.execute()
                 .catch { e ->
-                    _errorMessage.value = "Unexpected error in sleep data flow: ${e.message}"
-                    _allCandidates.value = emptyList()
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = "Unexpected error: ${e.message}",
+                            candidates = emptyList()
+                        )
+                    }
+                    _sourceCandidates.value = emptyList()
                 }
                 .collect { result ->
                     when (result) {
                         is DataResult.Success -> {
                             Log.d("HomeViewModel", "Fetched all candidates: ${result.data}")
                             _uiState.update{ currentState ->
-                                currentState.copy(isLoading = false, candidates = result.data) }
-                            _allCandidates.value = result.data
-                            _errorMessage.value = null
+                                currentState.copy(isLoading = false, errorMessage = null) }
+                            _sourceCandidates.value = result.data
                         }
                         is DataResult.Error -> {
                             Log.e("HomeViewModel", "Failed to load all candidates", result.exception)
                             _uiState.update { currentState ->
-                                currentState.copy(isLoading = false, errorMessage = result.exception.message)
+                                currentState.copy(isLoading = false, errorMessage = result.exception.message, candidates = emptyList())
                             }
-                            _allCandidates.value = emptyList()
-                            _errorMessage.value = "Failed to load all candidates: ${result.exception.message}"
+                            _sourceCandidates.value = emptyList()
                         }
                     }
                 }
         }
     }
 
+    fun fetchAllCandidatesIfNeeded() {
+        if (_sourceCandidates.value.isEmpty()) {
+            fetchAllCandidates()
+        }
+    }
+    fun setSearchQuery(query: String) {
+        _searchQuery.value = query.trim()
+    }
     fun clearErrorMessage() {
         _uiState.update { it.copy(errorMessage = null) }
     }

@@ -69,9 +69,6 @@ class CandidateFragment : Fragment() {
         setupRecyclerView()
         observeUiState()
 
-        if (viewModel.allCandidates.value.isEmpty()) {
-            viewModel.fetchAllCandidates()
-        }
     }
 
     private fun setupRecyclerView() {
@@ -83,22 +80,29 @@ class CandidateFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
-                    Log.d("CandidateFragment", "New UI State: isLoading=${state.isLoading}, candidates=${state.candidates.size}, error=${state.errorMessage}, showFavorites=$showFavoritesOnly")
-
+                    Log.d("CandidateFragment_OBSERVE", "Received state: isLoading=${state.isLoading}, candidates.size=${state.candidates.size}, query='${state.searchQuery}'")
                     binding.progressBar.isVisible = state.isLoading
 
-                    val filteredCandidates = if (showFavoritesOnly) {
+                    val candidatesForThisTab = if (showFavoritesOnly) {
                         state.candidates.filter { it.isFavorite }
                     } else {
                         state.candidates
                     }
-                    candidateAdapter.updateData(filteredCandidates)
-                    Log.d("CandidateFragment", "Submitted ${filteredCandidates.size} candidates to adapter.")
+                    candidateAdapter.updateData(candidatesForThisTab)
 
                     if (!state.isLoading) {
-                        binding.recyclerViewCandidates.isVisible = filteredCandidates.isNotEmpty()
+                        Log.d("CandidateFragment L", "Updating adapter with ${candidatesForThisTab.size} candidates")
+                        if (candidatesForThisTab.isEmpty()) {
+                            binding.textViewEmptyState.isVisible = true
+                            binding.recyclerViewCandidates.isVisible = false
+                        } else {
+                            binding.textViewEmptyState.isVisible = false
+                            binding.recyclerViewCandidates.isVisible = true
+                        }
                     } else {
+                        Log.d("CandidateFragment L", "Hiding adapter ${candidatesForThisTab.size} ")
                         binding.recyclerViewCandidates.isVisible = false
+                        binding.textViewEmptyState.isVisible = true
                     }
                     state.errorMessage?.let { message ->
                         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()

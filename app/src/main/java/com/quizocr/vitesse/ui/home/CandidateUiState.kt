@@ -5,5 +5,6 @@ import com.quizocr.vitesse.domain.model.Candidate
 data class CandidateUiState(
     val isLoading: Boolean = false,
     val candidates: List<Candidate> = emptyList(),
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val searchQuery: String = ""
 )

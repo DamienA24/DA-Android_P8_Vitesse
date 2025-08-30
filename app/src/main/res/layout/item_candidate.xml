@@ -37,7 +37,6 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:maxLines="1"
-            android:ellipsize="end"
             app:layout_constraintStart_toEndOf="@+id/cardAvatar"
             app:layout_constraintTop_toTopOf="@+id/cardAvatar"
             tools:text="Prénom NOM" />

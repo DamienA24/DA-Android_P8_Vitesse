@@ -90,6 +90,20 @@ abstract class AppDatabase : RoomDatabase() {
                     isFavorite = false,
                 )
             )
+
+            candidateDao.insertCandidate(
+                CandidateEntity(
+                    photoUri = "", // ou votre URI
+                    firstName = "bob",
+                    lastName = "commando",
+                    phoneNumber = "1234567890",
+                    email = "john.c.calhoun@examplepetstore.com",
+                    dateOfBirth = LocalDate.of(1998, 5, 15),
+                    salaryEuros = 50000.0,
+                    notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eleifend volutpat scelerisque. Vestibulum tincidunt mauris purus, bibendum tincidunt est viverra non. Maecenas eget nunc diam. Cras enim urna, dictum at ex eget, pulvinar lobortis enim. Nullam nec turpis eros. Etiam consectetur nunc justo, ut rutrum ligula ornare a. Fusce augue velit, ornare quis imperdiet ut, vehicula venenatis ante. Nulla at accumsan velit. Nullam venenatis rhoncus augue eu imperdiet. Sed aliquet neque ac ante porta semper.",
+                    isFavorite = true,
+                )
+            )
         }
     }
 
