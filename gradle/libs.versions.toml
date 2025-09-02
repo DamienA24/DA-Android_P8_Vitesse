@@ -16,6 +16,11 @@ roomCommonJvm = "2.7.2"
 roomRuntimeAndroid = "2.7.2"
 roomVersion = "2.7.2"
 daggerHilt = "2.56.2"
+mockito = "5.17.0"
+mockK = "1.12.3"
+coroutinesTest = "1.6.4"
+turbine = "0.7.0"
+mockitoKotlin = "5.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,6 +41,11 @@ androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = 
 androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "roomVersion" }
 dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "daggerHilt" }
+mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockK" }
+coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

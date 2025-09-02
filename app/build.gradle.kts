@@ -57,7 +57,14 @@ dependencies {
     implementation(libs.glide)
     kapt(libs.androidx.room.compiler)
     kapt(libs.dagger.hilt.compiler)
+
     testImplementation(libs.junit)
+    testImplementation(libs.mockito)
+    testImplementation(libs.mockk)
+    testImplementation(libs.turbine)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.mockito.kotlin)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

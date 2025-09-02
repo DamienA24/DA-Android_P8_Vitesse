@@ -1,0 +1,101 @@
+package com.quizocr.vitesse
+
+import com.quizocr.vitesse.data.repository.CandidateRepository
+import com.quizocr.vitesse.data.repository.DataResult
+import com.quizocr.vitesse.domain.usecase.GetAllCandidates
+import com.quizocr.vitesse.domain.model.Candidate
+import org.junit.Test
+
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Before
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
+import java.time.LocalDate
+
+/**
+ * Example local unit test, which will execute on the development machine (host).
+ *
+ * See [testing documentation](http://d.android.com/tools/testing).
+ */
+class GetAllCandidatesUseCaseTest {
+
+    private lateinit var candidateRepository: CandidateRepository
+    private lateinit var getAllCandidatesUseCaseTest: GetAllCandidates
+
+    @Before
+    fun setUp() {
+        candidateRepository = mock()
+        getAllCandidatesUseCaseTest = GetAllCandidates(candidateRepository)
+    }
+
+    @Test
+    fun `execute should return Success with a list of candidates when repository return success`() = runTest {
+        // Arrange
+        val expectedCandidates = listOf(
+            Candidate(
+                id = 1,
+                photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/72.jpg", // ou votre URI
+                firstName = "John",
+                lastName = "Wick",
+                phoneNumber = "1234567890",
+                email = "john.c.calhoun@examplepetstore.com",
+                dateOfBirth = LocalDate.of(1998, 5, 15),
+                salaryEuros = 50000.0,
+                notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eleifend volutpat scelerisque. Vestibulum tincidunt mauris purus, bibendum tincidunt est viverra non. Maecenas eget nunc diam. Cras enim urna, dictum at ex eget, pulvinar lobortis enim. Nullam nec turpis eros. Etiam consectetur nunc justo, ut rutrum ligula ornare a. Fusce augue velit, ornare quis imperdiet ut, vehicula venenatis ante. Nulla at accumsan velit. Nullam venenatis rhoncus augue eu imperdiet. Sed aliquet neque ac ante porta semper.",
+                isFavorite = false,
+                createdAt = 1234,
+                updatedAt = 1234
+            ),
+            Candidate(
+                id = 2,
+                photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/72.jpg", // ou votre URI
+                firstName = "John",
+                lastName = "Wick",
+                phoneNumber = "1234567890",
+                email = "john.c.calhoun@examplepetstore.com",
+                dateOfBirth = LocalDate.of(1998, 5, 15),
+                salaryEuros = 50000.0,
+                notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eleifend volutpat scelerisque. Vestibulum tincidunt mauris purus, bibendum tincidunt est viverra non. Maecenas eget nunc diam. Cras enim urna, dictum at ex eget, pulvinar lobortis enim. Nullam nec turpis eros. Etiam consectetur nunc justo, ut rutrum ligula ornare a. Fusce augue velit, ornare quis imperdiet ut, vehicula venenatis ante. Nulla at accumsan velit. Nullam venenatis rhoncus augue eu imperdiet. Sed aliquet neque ac ante porta semper.",
+                isFavorite = false,
+                createdAt = 1234,
+                updatedAt = 1234
+            )
+        )
+
+
+        val successResult = DataResult.Success(expectedCandidates)
+        val flowResult = flowOf(successResult)
+
+        whenever(candidateRepository.allCandidates()).thenReturn(flowResult)
+
+        // Act
+        val result = getAllCandidatesUseCaseTest.execute().first()
+
+        // Assert
+        assertTrue(result is DataResult.Success)
+        assertEquals(expectedCandidates, (result as DataResult.Success).data)
+    }
+
+    @Test
+    fun `execute should return Success with empty list when repository returns success with empty list`() = runTest {
+        // Arrange
+        val expectedCandidates = emptyList<Candidate>()
+        val successResult = DataResult.Success(expectedCandidates)
+        val flowResult = flowOf(successResult)
+
+        whenever(candidateRepository.allCandidates()).thenReturn(flowResult)
+
+        // Act
+        val result = getAllCandidatesUseCaseTest.execute()
+
+        // Assert
+        assertTrue(result.first() is DataResult.Success)
+        assertEquals(expectedCandidates, (result.first() as DataResult.Success).data)
+
+    }
+}
+
