@@ -69,13 +69,11 @@ class HomeViewModel @Inject constructor(private val getAllCandidates: GetAllCand
                 .collect { result ->
                     when (result) {
                         is DataResult.Success -> {
-                            Log.d("HomeViewModel", "Fetched all candidates: ${result.data}")
                             _uiState.update{ currentState ->
                                 currentState.copy(isLoading = false, errorMessage = null) }
                             _sourceCandidates.value = result.data
                         }
                         is DataResult.Error -> {
-                            Log.e("HomeViewModel", "Failed to load all candidates", result.exception)
                             _uiState.update { currentState ->
                                 currentState.copy(isLoading = false, errorMessage = result.exception.message, candidates = emptyList())
                             }
