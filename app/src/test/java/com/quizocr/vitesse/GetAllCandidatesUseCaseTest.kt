@@ -95,7 +95,22 @@ class GetAllCandidatesUseCaseTest {
         // Assert
         assertTrue(result.first() is DataResult.Success)
         assertEquals(expectedCandidates, (result.first() as DataResult.Success).data)
+    }
 
+    @Test
+    fun `execute should return Error when repository returns error`() = runTest {
+
+        // Arrange
+        val expectedException = "Database connection failed"
+        val errorResult = DataResult.Error(Exception(expectedException))
+
+        val flowResult = flowOf(errorResult)
+        whenever(candidateRepository.allCandidates()).thenReturn(flowResult)
+        // Act
+        val result = getAllCandidatesUseCaseTest.execute().first()
+        // Assert
+        assertTrue(result is DataResult.Error)
+        assertEquals(expectedException, (result as DataResult.Error).exception.message)
     }
 }
 
