@@ -55,6 +55,10 @@ dependencies {
     implementation(libs.androidx.room.paging)
     implementation(libs.dagger.hilt.android)
     implementation(libs.glide)
+    implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.fragment.ktx)
     kapt(libs.androidx.room.compiler)
     kapt(libs.dagger.hilt.compiler)
 

@@ -10,7 +10,7 @@
     <string name="last_name">Nom</string>
     <string name="phone_number">Téléphone</string>
     <string name="email">Email</string>
-    <string name="salary">rétentions salariales</string>
+    <string name="salary">Prétentions salariales</string>
     <string name="notes">Notes</string>
     <string name="save">Sauvegarder</string>
     <string name="mandatory_field">Champ obligatoire</string>
@@ -31,4 +31,6 @@
     <string name="retry">Réessayer</string>
     <string name="search_candidate">Rechercher un candidat</string>
     <string name="avatar_candidate">Avatar candidat</string>
+    <string name="back">Retour</string>
+    <string name="anniversary">Anniversaire</string>
 </resources>
