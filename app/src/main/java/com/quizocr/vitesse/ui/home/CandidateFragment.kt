@@ -14,8 +14,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.quizocr.vitesse.databinding.FragmentCandidateBinding
+import com.quizocr.vitesse.domain.model.CandidateSummary
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class CandidateFragment : Fragment() {
@@ -26,8 +28,8 @@ class CandidateFragment : Fragment() {
     private val viewModel: HomeViewModel by activityViewModels()
     private val candidateAdapter = CandidateAdapter(
         candidates = emptyList(),
-        onCandidateClick = { //candidate ->
-            //viewModel.onCandidateSelected(candidate)
+        onCandidateClick = { candidateSummary ->
+            viewModel.onCandidateSelected(candidateSummary)
         },
         onFavoriteClick = { candidate ->
             // TODO: Mettre à jour le statut favori du candidat

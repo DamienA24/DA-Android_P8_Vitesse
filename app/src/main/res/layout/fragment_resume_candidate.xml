@@ -15,11 +15,11 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             app:navigationIcon="@drawable/outline_arrow_back_24"
-            app:title="John DOE"
             app:titleTextAppearance="?attr/textAppearanceHeadline5"
             app:menu="@menu/resume_candidate_menu"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            tools:title="John DOE"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -32,8 +32,8 @@ class HomeViewModel @Inject constructor(private val getAllCandidates: GetAllCand
     private val _sourceCandidates = MutableStateFlow<List<CandidateSummary>>(emptyList())
     private val _searchQuery = MutableStateFlow("")
 
-    private val _navigateToResumeEvent = MutableSharedFlow<Candidate>()
-    val navigateToResumeEvent: SharedFlow<Candidate> = _navigateToResumeEvent.asSharedFlow()
+    private val _navigateToResumeEvent = MutableSharedFlow<CandidateSummary>()
+    val navigateToResumeEvent: SharedFlow<CandidateSummary> = _navigateToResumeEvent.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -102,9 +102,9 @@ class HomeViewModel @Inject constructor(private val getAllCandidates: GetAllCand
         _uiState.update { it.copy(errorMessage = null) }
     }
 
-    //fun onCandidateSelected(candidate: CandidateSummary) {
-      //  viewModelScope.launch {
-        //    _navigateToResumeEvent.emit(candidate)
-        //}
-    //}
+    fun onCandidateSelected(candidate: CandidateSummary) {
+       viewModelScope.launch {
+            _navigateToResumeEvent.emit(candidate)
+        }
+    }
 }

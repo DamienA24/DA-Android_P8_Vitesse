@@ -7,13 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.quizocr.vitesse.R
 import com.quizocr.vitesse.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -36,6 +41,7 @@ class HomeFragment : Fragment() {
         setupViewPager()
         setupFloatingActionButton()
         setupSearchField()
+        observeNavigationEvents()
         viewModel.fetchAllCandidatesIfNeeded()
     }
 
@@ -76,6 +82,17 @@ class HomeFragment : Fragment() {
             val searchQuery = binding.inputSeachCandidate.editText?.text?.toString() ?: ""
             Log.d("HomeFragment", "Search query: $searchQuery")
             viewModel.setSearchQuery(searchQuery)
+        }
+    }
+
+    private fun observeNavigationEvents() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navigateToResumeEvent.collectLatest { candidate ->
+                    val action = HomeFragmentDirections.actionHomeFragmentToResumeCandidateFragment(candidate.id)
+                    findNavController().navigate(action)
+                }
+            }
         }
     }
 

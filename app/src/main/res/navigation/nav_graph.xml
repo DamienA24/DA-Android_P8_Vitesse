@@ -10,8 +10,18 @@
         <fragment
             android:id="@+id/homeFragment"
             android:name="com.quizocr.vitesse.ui.home.HomeFragment"
-            android:label="Accueil"
-            tools:layout="@layout/fragment_home" />
+            android:label="@string/app_name"
+            tools:layout="@layout/fragment_home">
+            <action
+                android:id="@+id/action_homeFragment_to_resumeCandidateFragment"
+                app:destination="@id/resumeCandidateFragment" />
+                <!--
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"-->
+
+        </fragment>
 
         <!-- Écran d'ajout de candidat
         <fragment
@@ -20,12 +30,15 @@
             android:label="Ajouter un candidat"
             tools:layout="@layout/fragment_add_candidate" />-->
 
-        <!-- Écran de résumé d’un candidat
         <fragment
             android:id="@+id/resumeCandidateFragment"
             android:name="com.quizocr.vitesse.ui.resumeCandidate.ResumeCandidateFragment"
-            android:label="Résumé du candidat"
-            tools:layout="@layout/fragment_resume_candidate" />-->
+            android:label="@string/resume_candidate"
+            tools:layout="@layout/fragment_resume_candidate" >
+            <argument
+                android:name="candidateId"
+                app:argType="integer" />
+        </fragment>
 
     </navigation>
 
