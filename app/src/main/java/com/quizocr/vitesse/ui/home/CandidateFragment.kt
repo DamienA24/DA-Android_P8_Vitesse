@@ -24,12 +24,10 @@ class CandidateFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: HomeViewModel by activityViewModels()
-
     private val candidateAdapter = CandidateAdapter(
         candidates = emptyList(),
-        onCandidateClick = { candidate ->
-            // TODO: Navigation vers les détails du candidat
-            // findNavController().navigate(...)
+        onCandidateClick = { //candidate ->
+            //viewModel.onCandidateSelected(candidate)
         },
         onFavoriteClick = { candidate ->
             // TODO: Mettre à jour le statut favori du candidat

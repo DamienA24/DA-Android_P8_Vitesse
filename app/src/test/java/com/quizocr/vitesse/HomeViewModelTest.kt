@@ -3,6 +3,7 @@ package com.quizocr.vitesse
 import app.cash.turbine.test
 import com.quizocr.vitesse.data.repository.DataResult
 import com.quizocr.vitesse.domain.model.Candidate
+import com.quizocr.vitesse.domain.model.CandidateSummary
 import com.quizocr.vitesse.domain.usecase.GetAllCandidates
 import com.quizocr.vitesse.ui.home.HomeViewModel
 import kotlinx.coroutines.Dispatchers
@@ -35,9 +36,9 @@ class HomeViewModelTest {
     private lateinit var viewModel: HomeViewModel
 
     private val testDate = LocalDate.of(2024, 1, 15)
-    private val candidate1 = Candidate(1, "", "Alice", "Smith", "111", "alice@example.com", testDate, 60000.0, "", false, 0, 0)
-    private val candidate2 = Candidate(2, "", "Bob", "Johnson", "222", "bob@example.com", testDate.plusYears(1), 70000.0, "", true, 0, 0)
-    private val candidate3 = Candidate(3, "", "Carol", "Smith", "333", "carol@example.com", testDate.plusYears(2), 65000.0, "", false, 0, 0)
+    private val candidate1 = CandidateSummary(1, "", "Alice", "Smith", "111", true)
+    private val candidate2 = CandidateSummary(2, "", "Bob", "Johnson", "222",  true)
+    private val candidate3 = CandidateSummary(3, "", "Carol", "Smith", "333",  false)
     private val mockCandidateList = listOf(candidate1, candidate2, candidate3)
 
     @Before

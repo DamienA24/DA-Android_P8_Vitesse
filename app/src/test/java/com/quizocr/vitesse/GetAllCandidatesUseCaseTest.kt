@@ -4,6 +4,7 @@ import com.quizocr.vitesse.data.repository.CandidateRepository
 import com.quizocr.vitesse.data.repository.DataResult
 import com.quizocr.vitesse.domain.usecase.GetAllCandidates
 import com.quizocr.vitesse.domain.model.Candidate
+import com.quizocr.vitesse.domain.model.CandidateSummary
 import org.junit.Test
 
 import kotlinx.coroutines.flow.first
@@ -36,33 +37,21 @@ class GetAllCandidatesUseCaseTest {
     fun `execute should return Success with a list of candidates when repository return success`() = runTest {
         // Arrange
         val expectedCandidates = listOf(
-            Candidate(
+            CandidateSummary(
                 id = 1,
                 photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/72.jpg", // ou votre URI
                 firstName = "John",
                 lastName = "Wick",
-                phoneNumber = "1234567890",
-                email = "john.c.calhoun@examplepetstore.com",
-                dateOfBirth = LocalDate.of(1998, 5, 15),
-                salaryEuros = 50000.0,
                 notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eleifend volutpat scelerisque. Vestibulum tincidunt mauris purus, bibendum tincidunt est viverra non. Maecenas eget nunc diam. Cras enim urna, dictum at ex eget, pulvinar lobortis enim. Nullam nec turpis eros. Etiam consectetur nunc justo, ut rutrum ligula ornare a. Fusce augue velit, ornare quis imperdiet ut, vehicula venenatis ante. Nulla at accumsan velit. Nullam venenatis rhoncus augue eu imperdiet. Sed aliquet neque ac ante porta semper.",
                 isFavorite = false,
-                createdAt = 1234,
-                updatedAt = 1234
             ),
-            Candidate(
+            CandidateSummary(
                 id = 2,
                 photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/72.jpg", // ou votre URI
                 firstName = "John",
                 lastName = "Wick",
-                phoneNumber = "1234567890",
-                email = "john.c.calhoun@examplepetstore.com",
-                dateOfBirth = LocalDate.of(1998, 5, 15),
-                salaryEuros = 50000.0,
                 notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eleifend volutpat scelerisque. Vestibulum tincidunt mauris purus, bibendum tincidunt est viverra non. Maecenas eget nunc diam. Cras enim urna, dictum at ex eget, pulvinar lobortis enim. Nullam nec turpis eros. Etiam consectetur nunc justo, ut rutrum ligula ornare a. Fusce augue velit, ornare quis imperdiet ut, vehicula venenatis ante. Nulla at accumsan velit. Nullam venenatis rhoncus augue eu imperdiet. Sed aliquet neque ac ante porta semper.",
                 isFavorite = false,
-                createdAt = 1234,
-                updatedAt = 1234
             )
         )
 
@@ -83,7 +72,7 @@ class GetAllCandidatesUseCaseTest {
     @Test
     fun `execute should return Success with empty list when repository returns success with empty list`() = runTest {
         // Arrange
-        val expectedCandidates = emptyList<Candidate>()
+        val expectedCandidates = emptyList<CandidateSummary>()
         val successResult = DataResult.Success(expectedCandidates)
         val flowResult = flowOf(successResult)
 

@@ -1,15 +1,18 @@
 package com.quizocr.vitesse.ui.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.quizocr.vitesse.data.repository.DataResult
 import com.quizocr.vitesse.domain.model.Candidate
+import com.quizocr.vitesse.domain.model.CandidateSummary
 import com.quizocr.vitesse.domain.usecase.GetAllCandidates
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
@@ -26,8 +29,11 @@ class HomeViewModel @Inject constructor(private val getAllCandidates: GetAllCand
     private val _uiState = MutableStateFlow(CandidateUiState())
     val uiState: StateFlow<CandidateUiState> = _uiState.asStateFlow()
 
-    private val _sourceCandidates = MutableStateFlow<List<Candidate>>(emptyList())
+    private val _sourceCandidates = MutableStateFlow<List<CandidateSummary>>(emptyList())
     private val _searchQuery = MutableStateFlow("")
+
+    private val _navigateToResumeEvent = MutableSharedFlow<Candidate>()
+    val navigateToResumeEvent: SharedFlow<Candidate> = _navigateToResumeEvent.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -95,4 +101,10 @@ class HomeViewModel @Inject constructor(private val getAllCandidates: GetAllCand
     fun clearErrorMessage() {
         _uiState.update { it.copy(errorMessage = null) }
     }
+
+    //fun onCandidateSelected(candidate: CandidateSummary) {
+      //  viewModelScope.launch {
+        //    _navigateToResumeEvent.emit(candidate)
+        //}
+    //}
 }

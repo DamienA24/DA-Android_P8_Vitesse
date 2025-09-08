@@ -1,6 +1,5 @@
 package com.quizocr.vitesse.ui.home
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,15 +9,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.quizocr.vitesse.R
 import com.quizocr.vitesse.data.entity.CandidateEntity
-import com.quizocr.vitesse.domain.model.Candidate
+import com.quizocr.vitesse.domain.model.CandidateSummary
 
 class CandidateAdapter(
-    private var candidates: List<Candidate>,
-    private val onCandidateClick: (CandidateEntity) -> Unit,
+    private var candidates: List<CandidateSummary>,
+    private val onCandidateClick: (CandidateSummary) -> Unit,
     private val onFavoriteClick: (CandidateEntity) -> Unit
 ) : RecyclerView.Adapter<CandidateAdapter.CandidateViewHolder>() {
 
-    fun updateData(newCandidates: List<Candidate>) {
+    fun updateData(newCandidates: List<CandidateSummary>) {
         this.candidates = newCandidates
         notifyDataSetChanged()
     }
@@ -32,6 +31,9 @@ class CandidateAdapter(
 
     override fun onBindViewHolder(holder: CandidateViewHolder, position: Int) {
         holder.bind(candidates[position])
+        holder.itemView.setOnClickListener {
+            onCandidateClick(candidates[position])
+        }
     }
 
     override fun getItemCount(): Int {
@@ -42,7 +44,7 @@ class CandidateAdapter(
         private val nameTextView: TextView = itemView.findViewById(R.id.tvCandidateName)
         private val descriptionTextView: TextView = itemView.findViewById(R.id.tvCandidateDescription)
 
-        fun bind(candidate: Candidate) {
+        fun bind(candidate: CandidateSummary) {
             nameTextView.text = "${candidate.firstName} ${candidate.lastName}"
             descriptionTextView.text = candidate.notes
 
