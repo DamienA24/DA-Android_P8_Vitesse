@@ -27,16 +27,30 @@ class CandidateRepository(private val candidateDao: CandidateDao) {
             }
     }
 
-    suspend fun getFavoriteCandidates(): Flow<DataResult<List<Candidate>>> {
-        return candidateDao.getFavoriteCandidates()
-            .map { entityList ->
-                val domainList = entityList.map { entity -> Candidate.fromEntity(entity) }
-                DataResult.Success(domainList) as DataResult<List<Candidate>>
-            }
-            .catch { e ->
-                emit(DataResult.Error(Exception("Failed to fetch favorite candidates from database", e)))
+    /**
+     * Fetch a specific candidate by their ID from the database.
+     * @param id The ID of the candidate to fetch.
+     * @return Flow of DataResult containing the candidate or an error.
+     * @see DataResult
+     */
+    fun getCandidateById(id: Int): Flow<DataResult<Candidate>> {
+        return candidateDao.getCandidateById(id)
+            .map { entity: CandidateEntity? ->
+                if (entity != null) {
+                    try {
+                        val domainModel = Candidate.fromEntity(entity)
+                        DataResult.Success(domainModel)
+                    } catch (mappingException: Exception) {
+                        DataResult.Error(Exception("Failed to map data for candidate $id", mappingException)) as DataResult<Candidate>
+                    }
+                } else {
+                    DataResult.Error(NoSuchElementException("Candidate not found with id: $id")) as DataResult<Candidate>
+                }
+            }.catch { e ->
+                emit(DataResult.Error(Exception("Failed to fetch candidate data from database", e)))
             }
     }
+
 }
 
 

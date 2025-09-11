@@ -14,6 +14,7 @@
         >
 
         <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
             app:navigationIcon="@drawable/outline_arrow_back_24"
             app:titleTextAppearance="?attr/textAppearanceHeadline5"
             app:menu="@menu/resume_candidate_menu"
@@ -21,12 +22,13 @@
             android:layout_height="wrap_content"
             tools:title="John DOE"/>
 
-        <RelativeLayout
+        <ImageView
+            android:id="@+id/candidateImage"
             android:layout_width="match_parent"
+            android:layout_gravity="center"
             android:layout_height="200dp"
-            android:background="#D3D3D3"
-           >
-        </RelativeLayout>
+            android:contentDescription="@string/avatar_candidate"
+            tools:src="@drawable/ic_android_black_24dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -85,6 +87,7 @@
                     android:layout_marginBottom="12dp" />
 
                 <TextView
+                    android:id="@+id/candidateDateBirthday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/black"
@@ -127,6 +130,7 @@
                     android:layout_marginBottom="16dp" />
 
                 <TextView
+                    android:id="@+id/candidateSalary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/black"
@@ -136,6 +140,7 @@
                     tools:text="3500 €"/>
 
                 <TextView
+                    android:id="@+id/candidateSalaryPounds"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#666666"
@@ -171,6 +176,7 @@
                     android:layout_marginBottom="12dp" />
 
                 <TextView
+                    android:id="@+id/candidateNotes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/black"

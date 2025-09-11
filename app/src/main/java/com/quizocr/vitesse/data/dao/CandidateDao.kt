@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.quizocr.vitesse.data.entity.CandidateEntity
+import com.quizocr.vitesse.data.repository.DataResult
 import com.quizocr.vitesse.domain.model.CandidateSummary
 import kotlinx.coroutines.flow.Flow
 
@@ -24,6 +25,9 @@ interface CandidateDao {
 
     @Query("SELECT id, photo_uri, last_name, first_name, is_favorite, notes FROM candidates ORDER BY last_name ASC, first_name ASC")
     fun getAllCandidates(): Flow<List<CandidateSummary>>
+
+    @Query("SELECT * FROM candidates WHERE id = :id")
+     fun getCandidateById(id: Int): Flow<CandidateEntity>
 
     @Query("SELECT * FROM candidates WHERE is_favorite = 1 ORDER BY last_name ASC, first_name ASC")
     fun getFavoriteCandidates(): Flow<List<CandidateEntity>>
