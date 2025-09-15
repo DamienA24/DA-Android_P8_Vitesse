@@ -14,7 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.quizocr.vitesse.databinding.FragmentCandidateBinding
-import com.quizocr.vitesse.domain.model.CandidateSummary
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -80,7 +79,6 @@ class CandidateFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
-                    Log.d("CandidateFragment_OBSERVE", "Received state: isLoading=${state.isLoading}, candidates.size=${state.candidates.size}, query='${state.searchQuery}'")
                     binding.progressBar.isVisible = state.isLoading
 
                     val candidatesForThisTab = if (showFavoritesOnly) {
@@ -91,7 +89,6 @@ class CandidateFragment : Fragment() {
                     candidateAdapter.updateData(candidatesForThisTab)
 
                     if (!state.isLoading) {
-                        Log.d("CandidateFragment L", "Updating adapter with ${candidatesForThisTab.size} candidates")
                         if (candidatesForThisTab.isEmpty()) {
                             binding.textViewEmptyState.isVisible = true
                             binding.recyclerViewCandidates.isVisible = false
@@ -100,7 +97,6 @@ class CandidateFragment : Fragment() {
                             binding.recyclerViewCandidates.isVisible = true
                         }
                     } else {
-                        Log.d("CandidateFragment L", "Hiding adapter ${candidatesForThisTab.size} ")
                         binding.recyclerViewCandidates.isVisible = false
                         binding.textViewEmptyState.isVisible = true
                     }

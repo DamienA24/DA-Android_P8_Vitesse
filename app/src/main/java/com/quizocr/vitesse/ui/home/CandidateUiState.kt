@@ -1,6 +1,5 @@
 package com.quizocr.vitesse.ui.home
 
-import com.quizocr.vitesse.domain.model.Candidate
 import com.quizocr.vitesse.domain.model.CandidateSummary
 
 data class CandidateUiState(

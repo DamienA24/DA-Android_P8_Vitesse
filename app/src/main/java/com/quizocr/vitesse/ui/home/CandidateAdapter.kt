@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.quizocr.vitesse.R
 import com.quizocr.vitesse.data.entity.CandidateEntity
+import com.quizocr.vitesse.databinding.ItemCandidateBinding
 import com.quizocr.vitesse.domain.model.CandidateSummary
 
 class CandidateAdapter(
@@ -24,9 +25,12 @@ class CandidateAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CandidateViewHolder {
 
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_candidate, parent, false)
-        return CandidateViewHolder(view)
+        val itemBinding = ItemCandidateBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return CandidateViewHolder(itemBinding)
     }
 
     override fun onBindViewHolder(holder: CandidateViewHolder, position: Int) {
@@ -39,10 +43,10 @@ class CandidateAdapter(
     override fun getItemCount(): Int {
         return candidates.size
     }
-    inner class CandidateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val photoImageView: ImageView = itemView.findViewById(R.id.ivAvatar)
-        private val nameTextView: TextView = itemView.findViewById(R.id.tvCandidateName)
-        private val descriptionTextView: TextView = itemView.findViewById(R.id.tvCandidateDescription)
+    inner class CandidateViewHolder(private val binding: ItemCandidateBinding) : RecyclerView.ViewHolder(binding.root) {
+        private val photoImageView = binding.ivAvatar
+        private val nameTextView: TextView = binding.tvCandidateName
+        private val descriptionTextView: TextView = binding.tvCandidateDescription
 
         fun bind(candidate: CandidateSummary) {
             nameTextView.text = "${candidate.firstName} ${candidate.lastName}"
@@ -56,11 +60,6 @@ class CandidateAdapter(
                     .into(photoImageView)
             } else {
                 photoImageView.setImageResource(R.drawable.ic_android_black_24dp)
-            }
-
-            // Click listeners
-            itemView.setOnClickListener {
-
             }
         }
     }

@@ -80,7 +80,6 @@ class HomeFragment : Fragment() {
     private fun setupSearchField() {
         binding.inputSeachCandidate.setEndIconOnClickListener {
             val searchQuery = binding.inputSeachCandidate.editText?.text?.toString() ?: ""
-            Log.d("HomeFragment", "Search query: $searchQuery")
             viewModel.setSearchQuery(searchQuery)
         }
     }
