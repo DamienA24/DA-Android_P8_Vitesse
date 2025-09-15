@@ -53,6 +53,7 @@
                     android:paddingHorizontal="16dp"
                     android:clickable="true"
                     android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     >
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="wrap_content"
@@ -61,6 +62,8 @@
                         app:cardElevation="2dp"
                         app:cardBackgroundColor="@color/primaryVariant"
                         app:strokeColor="@color/primaryVariant"
+                        android:clickable="false"
+                        android:focusable="false"
                         >
                         <ImageButton
                             android:id="@+id/callImageButton"
@@ -70,7 +73,9 @@
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:padding="12dp"
                             android:scaleType="fitCenter"
-                            android:contentDescription="@string/call_candidate" />
+                            android:contentDescription="@string/call_candidate"
+                            android:clickable="false"
+                            android:focusable="false"/>
                     </com.google.android.material.card.MaterialCardView>
 
                     <TextView
@@ -79,7 +84,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="@string/call_label"
-                        android:gravity="center"/>
+                        android:gravity="center"
+                        android:clickable="false"
+                        android:focusable="false"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -91,6 +98,7 @@
                     android:paddingHorizontal="16dp"
                     android:clickable="true"
                     android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     >
 
                     <com.google.android.material.card.MaterialCardView
@@ -100,14 +108,20 @@
                         app:cardElevation="2dp"
                         app:cardBackgroundColor="@color/primaryVariant"
                         app:strokeColor="@color/primaryVariant"
+                        android:clickable="false"
+                        android:focusable="false"
                         >
                         <ImageButton
                             android:id="@+id/smsImageButton"
                             style="?attr/materialIconButtonFilledStyle"
+                            android:padding="12dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/outline_chat_24"
-                            android:contentDescription="@string/send_sms_to_candidate"/>
+                            android:contentDescription="@string/send_sms_to_candidate"
+                            android:clickable="false"
+                            android:focusable="false"/>
                     </com.google.android.material.card.MaterialCardView>
 
                     <TextView
@@ -116,7 +130,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="@string/sms_label"
-                        android:gravity="center"/>
+                        android:gravity="center"
+                        android:clickable="false"
+                        android:focusable="false"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -128,6 +144,7 @@
                     android:paddingHorizontal="16dp"
                     android:clickable="true"
                     android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     >
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="wrap_content"
@@ -136,14 +153,21 @@
                         app:cardElevation="2dp"
                         app:cardBackgroundColor="@color/primaryVariant"
                         app:strokeColor="@color/primaryVariant"
+                        android:clickable="false"
+                        android:focusable="false"
                         >
                         <ImageButton
                             android:id="@+id/emailImageButton"
                             style="?attr/materialIconButtonFilledStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:padding="12dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            app:cardCornerRadius="28dp"
                             android:src="@drawable/outline_mail_24"
-                            android:contentDescription="@string/send_email_to_candidate"/>
+                            android:contentDescription="@string/send_email_to_candidate"
+                            android:clickable="false"
+                            android:focusable="false"/>
                     </com.google.android.material.card.MaterialCardView>
 
                     <TextView
@@ -152,7 +176,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="@string/email_label"
-                        android:gravity="center"/>
+                        android:gravity="center"
+                        android:clickable="false"
+                        android:focusable="false"/>
                 </LinearLayout>
 
             </LinearLayout>

@@ -1,6 +1,9 @@
 package com.quizocr.vitesse.ui.resumeCandidate
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -29,6 +32,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.time.temporal.ChronoUnit
 import java.util.Locale
+import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class ResumeCandidateFragment : Fragment() {
@@ -57,6 +61,36 @@ class ResumeCandidateFragment : Fragment() {
         binding.topAppBar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
+
+        binding.callActionLayout.setOnClickListener {
+            viewModel.uiState.value.candidate?.phoneNumber?.let { number ->
+                if (number.isNotBlank()) {
+                    initiatePhoneCall(number)
+                } else {
+                    Toast.makeText(requireContext(), R.string.error_phone, Toast.LENGTH_SHORT).show()
+                }
+            } ?: Toast.makeText(requireContext(), R.string.miss_data_candidate, Toast.LENGTH_SHORT).show()
+        }
+
+        binding.smsActionLayout.setOnClickListener {
+            viewModel.uiState.value.candidate?.phoneNumber?.let { number ->
+                if (number.isNotBlank()) {
+                    initiateSms(number)
+                } else {
+                    Toast.makeText(requireContext(), R.string.error_phone, Toast.LENGTH_SHORT).show()
+                }
+            } ?: Toast.makeText(requireContext(), R.string.miss_data_candidate, Toast.LENGTH_SHORT).show()
+        }
+
+        binding.emailActionLayout.setOnClickListener {
+            viewModel.uiState.value.candidate?.email?.let { emailAddress ->
+                if (emailAddress.isNotBlank()) {
+                    initiateEmail(emailAddress)
+                } else {
+                    Toast.makeText(requireContext(), R.string.error_mail, Toast.LENGTH_SHORT).show()
+                }
+            } ?: Toast.makeText(requireContext(), R.string.miss_data_candidate, Toast.LENGTH_SHORT).show()
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -78,7 +112,7 @@ class ResumeCandidateFragment : Fragment() {
                         val formatSalary = NumberFormat.getNumberInstance(Locale.getDefault())
                         binding.candidateSalary.text = "${formatSalary.format(candidate.salaryEuros)} €"
 
-                        val poundsSuffix = getString(R.string.expected_salaray_pounds)
+                        val poundsSuffix = getString(R.string.expected_salary_pounds)
                         binding.candidateSalaryPounds.text = "$poundsSuffix ${uiState.formattedSalaryPounds}"
 
                         val age = calculateAgeInYears(candidate.dateOfBirth)
@@ -102,7 +136,43 @@ class ResumeCandidateFragment : Fragment() {
             }
         }
     }
-    
+
+    private fun initiatePhoneCall(phoneNumber: String) {
+        val intent = Intent(Intent.ACTION_DIAL).apply {
+            data = "tel:$phoneNumber".toUri()
+        }
+        try {
+            startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(requireContext(), R.string.no_call_application, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun initiateSms(phoneNumber: String) {
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = "smsto:$phoneNumber".toUri()
+        }
+        try {
+            startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(requireContext(), R.string.no_sms_application, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun initiateEmail(emailAddress: String) {
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = "mailto:".toUri()
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(emailAddress))
+        }
+        try {
+            val value = getString(R.string.send_email)
+            startActivity(Intent.createChooser(intent, value))
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(requireContext(), R.string.no_email_application, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
