@@ -1,12 +1,7 @@
 package com.quizocr.vitesse.domain.model
 
-import com.google.gson.annotations.SerializedName
-
-data class ExchangeRateResponse(
-    @SerializedName("date")
-    val date: String?,
-
-    @SerializedName("currency_rates")
-    val currencyRates: Map<String, Double>?,
-
+data class ConversionRate(
+    val fromCurrency: String,
+    val toCurrency: String,
+    val rate: Double
 )
