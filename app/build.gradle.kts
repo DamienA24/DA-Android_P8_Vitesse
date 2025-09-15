@@ -61,6 +61,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.okhttp3)
+    implementation(libs.okhttp3.logging)
     kapt(libs.androidx.room.compiler)
     kapt(libs.dagger.hilt.compiler)
 
