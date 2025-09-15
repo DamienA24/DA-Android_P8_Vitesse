@@ -34,5 +34,15 @@
     <string name="back">Retour</string>
     <string name="anniversary">Anniversaire</string>
     <string name="resume_candidate">Résumé</string>
-    <string name="expected_salaray_pounds">soit</string>
+    <string name="expected_salary_pounds">soit</string>
+    <string name="call_candidate">Appeler le candidat</string>
+    <string name="send_sms_to_candidate">Envoyer un SMS au candidat</string>
+    <string name="send_email_to_candidate">Envoyer un email au candidat</string>
+    <string name="error_phone">Numéro de téléphone non disponible</string>
+    <string name="miss_data_candidate">Informations du candidat non chargées</string>
+    <string name="error_mail">Adresse e-mail non disponible</string>
+    <string name="no_call_application">Aucune application d\'appel trouvée</string>
+    <string name="no_sms_application">Aucune application SMS trouvée</string>
+    <string name="no_email_application">Aucune application e-mail trouvée</string>
+    <string name="send_email">Envoyer un e-mail avec…</string>
 </resources>

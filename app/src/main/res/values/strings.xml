@@ -25,15 +25,25 @@
     <string name="email_label">E-mail</string>
     <string name="about_title">About</string>
     <string name="about_age">years old</string>
-    <string name="salary_currency_eur" translatable="false">soit €</string>
+    <string name="salary_currency_eur" translatable="false">suit €</string>
     <string name="salary_currency_gbp" translatable="false">or £</string>
     <string name="title_edit_candidate">Edit a candidate</string>
     <string name="error_loading_app">Error loading application</string>
     <string name="retry">Retry</string>
     <string name="search_candidate">Search candidate</string>
-    <string name="avatar_candidate">Avatar candidat</string>
+    <string name="avatar_candidate">Avatar candidate</string>
     <string name="back">Back</string>
     <string name="anniversary">Anniversary</string>
     <string name="resume_candidate">Resume</string>
-    <string name="expected_salaray_pounds">or</string>
+    <string name="expected_salaryexpected_salary_pounds_pounds">or</string>
+    <string name="call_candidate">Call candidate</string>
+    <string name="send_sms_to_candidate">Send SMS to candidate</string>
+    <string name="send_email_to_candidate">Send mail to candidate</string>
+    <string name="error_phone">Telephone number not available</string>
+    <string name="miss_data_candidate">Candidate information not loaded</string>
+    <string name="error_mail">Mail not available</string>
+    <string name="no_call_application">No call application found</string>
+    <string name="no_sms_application">No sms application found</string>
+    <string name="no_email_application">No e-mail application found</string>
+    <string name="send_email">Send an email with…</string>
 </resources>
