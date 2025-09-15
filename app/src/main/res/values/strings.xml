@@ -35,5 +35,5 @@
     <string name="back">Back</string>
     <string name="anniversary">Anniversary</string>
     <string name="resume_candidate">Resume</string>
-    <string name="expected_salaray_pounds">or £</string>
+    <string name="expected_salaray_pounds">or</string>
 </resources>

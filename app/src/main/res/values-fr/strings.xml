@@ -34,5 +34,5 @@
     <string name="back">Retour</string>
     <string name="anniversary">Anniversaire</string>
     <string name="resume_candidate">Résumé</string>
-    <string name="expected_salaray_pounds">soit £</string>
+    <string name="expected_salaray_pounds">soit</string>
 </resources>
