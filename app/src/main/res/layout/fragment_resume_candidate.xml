@@ -36,40 +36,127 @@
                 tools:src="@drawable/ic_android_black_24dp"/>
 
             <LinearLayout
+                android:id="@+id/contactActionsLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
-                android:gravity="center"
-                >
+                android:paddingVertical="10dp"
+                android:gravity="center_horizontal" >
 
-                <Button
-                    android:id="@+id/callButton"
-                    style="?attr/materialIconButtonFilledStyle"
+                <LinearLayout
+                    android:id="@+id/callActionLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:icon="@drawable/outline_phone_enabled_24"/>
-                <Space
-                    android:layout_width="8dp"
-                    android:layout_height="wrap_content" />
-                <Button
-                    android:id="@+id/smsButton"
-                    style="?attr/materialIconButtonFilledStyle"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:paddingHorizontal="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    >
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="28dp"
+                        app:cardElevation="2dp"
+                        app:cardBackgroundColor="@color/primaryVariant"
+                        app:strokeColor="@color/primaryVariant"
+                        >
+                        <ImageButton
+                            android:id="@+id/callImageButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/outline_phone_enabled_24"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:padding="12dp"
+                            android:scaleType="fitCenter"
+                            android:contentDescription="@string/call_candidate" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:id="@+id/callLabelTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/call_label"
+                        android:gravity="center"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/smsActionLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:icon="@drawable/outline_chat_24"/>
-                <Space
-                    android:layout_width="8dp"
-                    android:layout_height="wrap_content" />
-                <Button
-                    android:id="@+id/emailButton"
-                    style="?attr/materialIconButtonFilledStyle"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:paddingHorizontal="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    >
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="28dp"
+                        app:cardElevation="2dp"
+                        app:cardBackgroundColor="@color/primaryVariant"
+                        app:strokeColor="@color/primaryVariant"
+                        >
+                        <ImageButton
+                            android:id="@+id/smsImageButton"
+                            style="?attr/materialIconButtonFilledStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/outline_chat_24"
+                            android:contentDescription="@string/send_sms_to_candidate"/>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:id="@+id/smsLabelTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/sms_label"
+                        android:gravity="center"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/emailActionLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:icon="@drawable/outline_mail_24"/>
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:paddingHorizontal="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    >
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="28dp"
+                        app:cardElevation="2dp"
+                        app:cardBackgroundColor="@color/primaryVariant"
+                        app:strokeColor="@color/primaryVariant"
+                        >
+                        <ImageButton
+                            android:id="@+id/emailImageButton"
+                            style="?attr/materialIconButtonFilledStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/outline_mail_24"
+                            android:contentDescription="@string/send_email_to_candidate"/>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:id="@+id/emailLabelTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/email_label"
+                        android:gravity="center"/>
+                </LinearLayout>
 
             </LinearLayout>
+
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
