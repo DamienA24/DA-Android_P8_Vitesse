@@ -5,9 +5,11 @@ import com.quizocr.vitesse.data.dao.CandidateDao
 import com.quizocr.vitesse.data.entity.CandidateEntity
 import com.quizocr.vitesse.domain.model.Candidate
 import com.quizocr.vitesse.domain.model.CandidateSummary
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 class CandidateRepository(private val candidateDao: CandidateDao) {
 
@@ -54,6 +56,22 @@ class CandidateRepository(private val candidateDao: CandidateDao) {
             }
     }
 
+    /**
+     * Update the favorite status of a candidate in the database.
+     * @param candidateId The ID of the candidate to update.
+     * @param isFavorite The new favorite status.
+     */
+    suspend fun updateFavoriteStatus(candidateId: Int, isFavorite: Boolean): DataResult<Unit>{
+        return try {
+            withContext(Dispatchers.IO) {
+                candidateDao.updateFavoriteStatus(candidateId, isFavorite)
+                DataResult.Success(Unit)
+            }
+        } catch (e: Exception) {
+            Log.e("CandidateRepository", "Failed to update favorite status for $candidateId", e)
+            DataResult.Error(Exception("Failed to update favorite status", e))
+        }
+    }
 }
 
 

@@ -8,6 +8,9 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -27,12 +30,10 @@ import com.quizocr.vitesse.utils.formatDateShort
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
-import java.time.temporal.ChronoUnit
 import java.util.Locale
 import androidx.core.net.toUri
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 
 @AndroidEntryPoint
 class ResumeCandidateFragment : Fragment() {
@@ -41,6 +42,8 @@ class ResumeCandidateFragment : Fragment() {
 
     private var _binding: FragmentResumeCandidateBinding? = null
     private val binding get() = _binding!!
+
+    private var starMenuItem: MenuItem? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,12 +58,43 @@ class ResumeCandidateFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupObservers()
         setupClickListeners()
+        setupFragmentToolbar()
     }
 
-    private fun setupClickListeners() {
+    private fun setupFragmentToolbar() {
         binding.topAppBar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
+        binding.topAppBar.setOnMenuItemClickListener { menuItem ->
+            Log.d("FragmentToolbar", "Item cliqué : ${menuItem.title}, ID: ${menuItem.itemId}")
+            when (menuItem.itemId) {
+                R.id.action_star -> {
+                    Log.d("FragmentToolbar", "ACTION_STAR cliqué")
+                    viewModel.toggleFavoriteStatus()
+                    true
+                }
+                R.id.action_edit -> {
+                    Toast.makeText(requireContext(), "Edit clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.action_delete -> {
+                    Toast.makeText(requireContext(), "Delete clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    private fun updateStarIcon(isFavorite: Boolean) {
+        if (isFavorite) {
+            starMenuItem?.setIcon(R.drawable.baseline_star_24)
+        } else {
+            starMenuItem?.setIcon(R.drawable.outline_star_24)
+        }
+    }
+
+    private fun setupClickListeners() {
 
         binding.callActionLayout.setOnClickListener {
             viewModel.uiState.value.candidate?.phoneNumber?.let { number ->
@@ -101,7 +135,7 @@ class ResumeCandidateFragment : Fragment() {
                 viewModel.uiState.collect { uiState ->
                     binding.loadingProgressBar.isVisible = uiState.isLoading
                     binding.contentScrollView.isVisible = !uiState.isLoading
-
+                    starMenuItem = binding.topAppBar.menu.findItem(R.id.action_star)
                     if (uiState.errorMessage != null) {
                         Toast.makeText(requireContext(), uiState.errorMessage, Toast.LENGTH_SHORT).show()
                     }
@@ -119,7 +153,7 @@ class ResumeCandidateFragment : Fragment() {
                         val formattedDateOfBirth = formatDateShort(candidate.dateOfBirth)
                         val ageSuffix = getString(R.string.about_age)
                         binding.candidateDateBirthday.text = "$formattedDateOfBirth ($age $ageSuffix)"
-
+                        updateStarIcon(candidate.isFavorite)
                         if (!candidate.photoUri.isNullOrBlank()) {
                             Glide.with(this@ResumeCandidateFragment)
                                 .load(candidate.photoUri)
@@ -150,7 +184,7 @@ class ResumeCandidateFragment : Fragment() {
 
     private fun initiateSms(phoneNumber: String) {
         val intent = Intent(Intent.ACTION_SENDTO).apply {
-            data = "smsto:$phoneNumber".toUri()
+            data = "sms to:$phoneNumber".toUri()
         }
         try {
             startActivity(intent)

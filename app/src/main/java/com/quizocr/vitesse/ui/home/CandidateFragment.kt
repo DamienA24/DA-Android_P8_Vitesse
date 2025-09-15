@@ -30,9 +30,6 @@ class CandidateFragment : Fragment() {
         onCandidateClick = { candidateSummary ->
             viewModel.onCandidateSelected(candidateSummary)
         },
-        onFavoriteClick = { candidate ->
-            // TODO: Mettre à jour le statut favori du candidat
-        }
     )
 
     private var showFavoritesOnly: Boolean = false

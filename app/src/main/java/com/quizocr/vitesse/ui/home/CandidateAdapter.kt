@@ -14,8 +14,7 @@ import com.quizocr.vitesse.domain.model.CandidateSummary
 
 class CandidateAdapter(
     private var candidates: List<CandidateSummary>,
-    private val onCandidateClick: (CandidateSummary) -> Unit,
-    private val onFavoriteClick: (CandidateEntity) -> Unit
+    private val onCandidateClick: (CandidateSummary) -> Unit
 ) : RecyclerView.Adapter<CandidateAdapter.CandidateViewHolder>() {
 
     fun updateData(newCandidates: List<CandidateSummary>) {

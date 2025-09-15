@@ -2,21 +2,25 @@ package com.quizocr.vitesse.ui.resumeCandidate
 
 import android.icu.text.NumberFormat
 import android.util.Log
+import androidx.activity.result.launch
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.quizocr.vitesse.data.repository.DataResult
 import com.quizocr.vitesse.domain.usecase.GetCandidateById
 import com.quizocr.vitesse.domain.usecase.GetCurrencyConversionRateUseCase
+import com.quizocr.vitesse.domain.usecase.UpdateCandidateFavoriteStatusUseCase
 import com.quizocr.vitesse.utils.formatCurrencyInUk
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
 
@@ -24,6 +28,7 @@ import javax.inject.Inject
 class ResumeCandidateViewModel @Inject constructor(
     private val getCandidateById: GetCandidateById,
     private val getCurrencyConversionRateUseCase: GetCurrencyConversionRateUseCase,
+    private val updateCandidateFavoriteStatusUseCase: UpdateCandidateFavoriteStatusUseCase,
     savedStateHandle: SavedStateHandle) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ResumeCandidateUiState())
@@ -34,6 +39,19 @@ class ResumeCandidateViewModel @Inject constructor(
     init {
         if (candidateId != -1 && candidateId != 0) {
             loadCandidateDetails(candidateId)
+
+            viewModelScope.launch {
+                val initialState = uiState.first {
+                    it.candidate != null && !it.isLoading
+                }
+                initialState.candidate?.salaryEuros?.let { salaryInEuros ->
+                    if (salaryInEuros > 0) {
+                        convertSalaryToPounds(salaryInEuros)
+                    } else {
+                        _uiState.update { it.copy(isConvertingCurrency = false, formattedSalaryPounds = "N/A") }
+                    }
+                }
+            }
         } else {
             _uiState.update {
                 it.copy(
@@ -50,31 +68,21 @@ class ResumeCandidateViewModel @Inject constructor(
                 _uiState.update { it.copy(isLoading = true, errorMessage = null, candidate = null, isConvertingCurrency = true) }
             }
             .onEach { result ->
-                when (result) {
-                    is DataResult.Success -> {
-                        val candidate = result.data
-                        _uiState.update { currentState ->
+                _uiState.update { currentState ->
+                    when (result) {
+                        is DataResult.Success -> {
+                            val candidate = result.data
                             currentState.copy(
+                                isLoading = false,
                                 candidate = candidate,
                                 errorMessage = null
                             )
                         }
-                        candidate.salaryEuros.let { salaryInEuros ->
-                            if (salaryInEuros > 0) {
-                                convertSalaryToPounds(salaryInEuros)
-                            } else {
-                                _uiState.update { it.copy(isLoading = false, isConvertingCurrency = false, formattedSalaryPounds = "N/A") }
-                            }
-                        }
-                    }
-
-                    is DataResult.Error -> {
-                        _uiState.update { currentState ->
+                        is DataResult.Error -> {
                             currentState.copy(
                                 isLoading = false,
                                 candidate = null,
-                                errorMessage = result.exception.message
-                                    ?: "Failed to load candidate details."
+                                errorMessage = result.exception.message ?: "Failed to load candidate details."
                             )
                         }
                     }
@@ -119,5 +127,45 @@ class ResumeCandidateViewModel @Inject constructor(
                 }
             }
             .launchIn(viewModelScope)
+    }
+
+    fun toggleFavoriteStatus() {
+        Log.d("ViewModel", "toggleFavoriteStatus CALLED - START")
+        val currentCandidate = _uiState.value.candidate ?: return
+        val newFavoriteStatus = !currentCandidate.isFavorite
+
+        viewModelScope.launch {
+            Log.d("ViewModel", "toggleFavoriteStatus - Coroutine launched. Updating to: $newFavoriteStatus")
+            when (val result = updateCandidateFavoriteStatusUseCase.execute(
+                currentCandidate.id,
+                newFavoriteStatus
+            )) {
+                is DataResult.Success -> {
+                    _uiState.update { currentState ->
+                        currentState.candidate?.let { cand ->
+                            currentState.copy(candidate = cand.copy(isFavorite = newFavoriteStatus))
+                        } ?: currentState
+                    }
+                    Log.d(
+                        "ViewModel",
+                        "Favorite status updated successfully for ${currentCandidate.id}"
+                    )
+                }
+
+                is DataResult.Error -> {
+                    _uiState.update {
+                        it.copy(
+                            errorMessage = result.exception.message
+                                ?: "Failed to update favorite status."
+                        )
+                    }
+                    Log.e(
+                        "ViewModel",
+                        "Failed to update favorite status: ${result.exception.message}"
+                    )
+                }
+            }
+            Log.d("ViewModel", "toggleFavoriteStatus - Coroutine finished.")
+        }
     }
 }
