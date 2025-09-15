@@ -16,10 +16,13 @@ class CandidateRepository(private val candidateDao: CandidateDao) {
      * @return Flow of DataResult containing a list of candidates or an error.
      * @see DataResult
      */
-    suspend fun allCandidates(): Flow<DataResult<List<CandidateSummary>>> {
+     fun allCandidates(): Flow<DataResult<List<CandidateSummary>>> {
         return candidateDao.getAllCandidates() //
             .map { summaryList ->
-                Log.d("CandidateRepository", "Fetched candidate summaries from database: $summaryList")
+                Log.d(
+                    "CandidateRepository",
+                    "Fetched candidate summaries from database: $summaryList"
+                )
                 DataResult.Success(summaryList) as DataResult<List<CandidateSummary>>
             }
             .catch { e ->

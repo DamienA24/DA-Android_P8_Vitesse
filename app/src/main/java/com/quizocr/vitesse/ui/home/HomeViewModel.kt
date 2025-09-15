@@ -16,6 +16,9 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -59,35 +62,38 @@ class HomeViewModel @Inject constructor(private val getAllCandidates: GetAllCand
     }
 
     fun fetchAllCandidates() {
-        viewModelScope.launch {
-            _uiState.update { currentState -> currentState.copy(isLoading = true) }
-            getAllCandidates.execute()
-                .catch { e ->
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            errorMessage = "Unexpected error: ${e.message}",
-                            candidates = emptyList()
-                        )
+        getAllCandidates.execute()
+            .onStart {
+                _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+                 _sourceCandidates.value = emptyList()
+            }
+            .onEach { result: DataResult<List<CandidateSummary>> ->
+                when (result) {
+                    is DataResult.Success -> {
+                        _sourceCandidates.value = result.data
+                        _uiState.update { it.copy(isLoading = false, errorMessage = null) }
                     }
-                    _sourceCandidates.value = emptyList()
-                }
-                .collect { result ->
-                    when (result) {
-                        is DataResult.Success -> {
-                            _uiState.update{ currentState ->
-                                currentState.copy(isLoading = false, errorMessage = null) }
-                            _sourceCandidates.value = result.data
+                    is DataResult.Error -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                errorMessage = result.exception.message ?: "Unknown error"
+                            )
                         }
-                        is DataResult.Error -> {
-                            _uiState.update { currentState ->
-                                currentState.copy(isLoading = false, errorMessage = result.exception.message, candidates = emptyList())
-                            }
-                            _sourceCandidates.value = emptyList()
-                        }
+                        _sourceCandidates.value = emptyList()
                     }
                 }
-        }
+            }
+            .catch { e ->
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = "Unexpected error during flow collection: ${e.message}"
+                    )
+                }
+                _sourceCandidates.value = emptyList()
+            }
+            .launchIn(viewModelScope)
     }
 
     fun fetchAllCandidatesIfNeeded() {

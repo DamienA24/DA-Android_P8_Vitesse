@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetAllCandidates  @Inject constructor(private val candidateRepository: CandidateRepository) {
-    suspend fun execute(): Flow<DataResult<List<CandidateSummary>>> {
+     fun execute(): Flow<DataResult<List<CandidateSummary>>> {
         return candidateRepository.allCandidates()
     }
 }
