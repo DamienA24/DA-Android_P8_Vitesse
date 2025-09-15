@@ -1,10 +1,14 @@
 package com.quizocr.vitesse.ui.resumeCandidate
 
+import android.icu.text.NumberFormat
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.quizocr.vitesse.data.repository.DataResult
 import com.quizocr.vitesse.domain.usecase.GetCandidateById
+import com.quizocr.vitesse.domain.usecase.GetCurrencyConversionRateUseCase
+import com.quizocr.vitesse.utils.formatCurrencyInUk
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,12 +17,14 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class ResumeCandidateViewModel @Inject constructor(
     private val getCandidateById: GetCandidateById,
-    private val savedStateHandle: SavedStateHandle) : ViewModel() {
+    private val getCurrencyConversionRateUseCase: GetCurrencyConversionRateUseCase,
+    savedStateHandle: SavedStateHandle) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ResumeCandidateUiState())
     val uiState: StateFlow<ResumeCandidateUiState> = _uiState.asStateFlow()
@@ -26,7 +32,7 @@ class ResumeCandidateViewModel @Inject constructor(
     private val candidateId: Int = savedStateHandle.get<Int>("candidateId") ?: -1
 
     init {
-        if (candidateId != -1 && candidateId != 0) { // Vérifiez une valeur d'ID valide
+        if (candidateId != -1 && candidateId != 0) {
             loadCandidateDetails(candidateId)
         } else {
             _uiState.update {
@@ -41,23 +47,34 @@ class ResumeCandidateViewModel @Inject constructor(
     private fun loadCandidateDetails(idToLoad: Int) {
         getCandidateById.execute(idToLoad)
             .onStart {
-                _uiState.update { it.copy(isLoading = true, errorMessage = null, candidate = null) }
+                _uiState.update { it.copy(isLoading = true, errorMessage = null, candidate = null, isConvertingCurrency = true) }
             }
             .onEach { result ->
-                _uiState.update { currentState ->
-                    when (result) {
-                        is DataResult.Success -> {
+                when (result) {
+                    is DataResult.Success -> {
+                        val candidate = result.data
+                        _uiState.update { currentState ->
                             currentState.copy(
-                                isLoading = false,
-                                candidate = result.data,
+                                candidate = candidate,
                                 errorMessage = null
                             )
                         }
-                        is DataResult.Error -> {
+                        candidate.salaryEuros.let { salaryInEuros ->
+                            if (salaryInEuros > 0) {
+                                convertSalaryToPounds(salaryInEuros)
+                            } else {
+                                _uiState.update { it.copy(isLoading = false, isConvertingCurrency = false, formattedSalaryPounds = "N/A") }
+                            }
+                        }
+                    }
+
+                    is DataResult.Error -> {
+                        _uiState.update { currentState ->
                             currentState.copy(
                                 isLoading = false,
                                 candidate = null,
-                                errorMessage = result.exception.message ?: "An unknown error occurred"
+                                errorMessage = result.exception.message
+                                    ?: "Failed to load candidate details."
                             )
                         }
                     }
@@ -66,4 +83,41 @@ class ResumeCandidateViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
+    private fun convertSalaryToPounds(salaryInEuros: Double) {
+        getCurrencyConversionRateUseCase("eur", "gbp")
+            .onStart {
+                _uiState.update {
+                    it.copy(
+                        isConvertingCurrency = true,
+                        conversionErrorMessage = null,
+                        formattedSalaryPounds = null
+                    )
+                }
+            }
+            .onEach { result ->
+                _uiState.update { currentState ->
+                    when (result) {
+                        is DataResult.Success -> {
+                            val rate = result.data.rate
+                            val salaryInPounds = salaryInEuros * rate
+                            currentState.copy(
+                                isLoading = false,
+                                isConvertingCurrency = false,
+                                formattedSalaryPounds = formatCurrencyInUk(salaryInPounds),
+                                conversionErrorMessage = null
+                            )
+                        }
+                        is DataResult.Error -> {
+                            currentState.copy(
+                                isLoading = false,
+                                isConvertingCurrency = false,
+                                formattedSalaryPounds = null,
+                                conversionErrorMessage = result.exception.message ?: "Currency conversion failed."
+                            )
+                        }
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+    }
 }

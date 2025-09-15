@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -18,6 +19,8 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.quizocr.vitesse.R
 import com.quizocr.vitesse.databinding.FragmentResumeCandidateBinding
+import com.quizocr.vitesse.utils.calculateAgeInYears
+import com.quizocr.vitesse.utils.formatDateShort
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -62,6 +65,9 @@ class ResumeCandidateFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
+                    binding.loadingProgressBar.isVisible = uiState.isLoading
+                    binding.contentScrollView.isVisible = !uiState.isLoading
+
                     if (uiState.errorMessage != null) {
                         Toast.makeText(requireContext(), uiState.errorMessage, Toast.LENGTH_SHORT).show()
                     }
@@ -72,8 +78,11 @@ class ResumeCandidateFragment : Fragment() {
                         val formatSalary = NumberFormat.getNumberInstance(Locale.getDefault())
                         binding.candidateSalary.text = "${formatSalary.format(candidate.salaryEuros)} €"
 
-                        val age = calculateAge(candidate.dateOfBirth)
-                        val formattedDateOfBirth = formateDateBirthday(candidate.dateOfBirth)
+                        val poundsSuffix = getString(R.string.expected_salaray_pounds)
+                        binding.candidateSalaryPounds.text = "$poundsSuffix ${uiState.formattedSalaryPounds}"
+
+                        val age = calculateAgeInYears(candidate.dateOfBirth)
+                        val formattedDateOfBirth = formatDateShort(candidate.dateOfBirth)
                         val ageSuffix = getString(R.string.about_age)
                         binding.candidateDateBirthday.text = "$formattedDateOfBirth ($age $ageSuffix)"
 
@@ -93,21 +102,7 @@ class ResumeCandidateFragment : Fragment() {
             }
         }
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun formateDateBirthday(dateOfBirthLocalDate: LocalDate): String? {
-        val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
-        val today = LocalDate.now()
-        val age = ChronoUnit.YEARS.between(dateOfBirthLocalDate, today)
-        return dateOfBirthLocalDate.format(dateFormatter)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun calculateAge(dateOfBirthLocalDate: LocalDate): Long {
-        val today = LocalDate.now()
-        return ChronoUnit.YEARS.between(dateOfBirthLocalDate, today)
-    }
-
+    
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
