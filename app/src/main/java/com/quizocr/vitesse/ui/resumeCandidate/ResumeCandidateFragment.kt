@@ -5,12 +5,10 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -19,16 +17,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.quizocr.vitesse.R
 import com.quizocr.vitesse.databinding.FragmentResumeCandidateBinding
+import com.quizocr.vitesse.domain.model.Candidate
 import com.quizocr.vitesse.utils.calculateAgeInYears
 import com.quizocr.vitesse.utils.formatDateShort
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
-import java.util.Locale
-import androidx.core.net.toUri
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.util.*
 
 @AndroidEntryPoint
 class ResumeCandidateFragment : Fragment() {
@@ -53,158 +51,158 @@ class ResumeCandidateFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupObservers()
         setupClickListeners()
-        setupFragmentToolbar()
+        setupToolbar()
     }
 
-    private fun setupFragmentToolbar() {
-        binding.topAppBar.setNavigationOnClickListener {
-            findNavController().navigateUp()
+    // -------- Toolbar --------
+    private fun setupToolbar() = with(binding.topAppBar) {
+        setNavigationOnClickListener { findNavController().navigateUp() }
+        setOnMenuItemClickListener { handleToolbarAction(it.itemId) }
+    }
+
+    private fun handleToolbarAction(itemId: Int): Boolean =
+        when (itemId) {
+            R.id.action_star -> {
+                viewModel.toggleFavoriteStatus()
+                true
+            }
+            R.id.action_edit -> {
+                //
+                true
+            }
+            R.id.action_delete -> {
+                showDeleteConfirmationDialog()
+                true
+            }
+            else -> false
         }
-        binding.topAppBar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.action_star -> {
-                    viewModel.toggleFavoriteStatus()
-                    true
-                }
-                R.id.action_edit -> {
-                    Toast.makeText(requireContext(), "Edit clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.action_delete -> {
-                    showDeleteConfirmationDialog()
-                    true
-                }
-                else -> false
+
+    private fun updateStarIcon(isFavorite: Boolean) {
+        val iconRes = if (isFavorite) R.drawable.baseline_star_24 else R.drawable.outline_star_24
+        starMenuItem?.setIcon(iconRes)
+    }
+
+    private fun setupClickListeners() = with(binding) {
+        callActionLayout.setCandidateClick(
+            { it.phoneNumber },
+            R.string.error_phone,
+            ::initiatePhoneCall
+        )
+        smsActionLayout.setCandidateClick(
+            { it.phoneNumber },
+            R.string.error_phone,
+            ::initiateSms
+        )
+        emailActionLayout.setCandidateClick(
+            { it.email },
+            R.string.error_mail,
+            ::initiateEmail
+        )
+    }
+
+    private fun View.setCandidateClick(
+        valueProvider: (Candidate) -> String?,
+        errorRes: Int,
+        action: (String) -> Unit
+    ) {
+        setOnClickListener {
+            val candidate = viewModel.uiState.value.candidate
+            val value = candidate?.let(valueProvider)
+            if (!value.isNullOrBlank()) {
+                action(value)
+            } else {
+                Toast.makeText(requireContext(), errorRes, Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun updateStarIcon(isFavorite: Boolean) {
-        if (isFavorite) {
-            starMenuItem?.setIcon(R.drawable.baseline_star_24)
-        } else {
-            starMenuItem?.setIcon(R.drawable.outline_star_24)
-        }
-    }
-
-    private fun setupClickListeners() {
-
-        binding.callActionLayout.setOnClickListener {
-            viewModel.uiState.value.candidate?.phoneNumber?.let { number ->
-                if (number.isNotBlank()) {
-                    initiatePhoneCall(number)
-                } else {
-                    Toast.makeText(requireContext(), R.string.error_phone, Toast.LENGTH_SHORT).show()
-                }
-            } ?: Toast.makeText(requireContext(), R.string.miss_data_candidate, Toast.LENGTH_SHORT).show()
-        }
-
-        binding.smsActionLayout.setOnClickListener {
-            viewModel.uiState.value.candidate?.phoneNumber?.let { number ->
-                if (number.isNotBlank()) {
-                    initiateSms(number)
-                } else {
-                    Toast.makeText(requireContext(), R.string.error_phone, Toast.LENGTH_SHORT).show()
-                }
-            } ?: Toast.makeText(requireContext(), R.string.miss_data_candidate, Toast.LENGTH_SHORT).show()
-        }
-
-        binding.emailActionLayout.setOnClickListener {
-            viewModel.uiState.value.candidate?.email?.let { emailAddress ->
-                if (emailAddress.isNotBlank()) {
-                    initiateEmail(emailAddress)
-                } else {
-                    Toast.makeText(requireContext(), R.string.error_mail, Toast.LENGTH_SHORT).show()
-                }
-            } ?: Toast.makeText(requireContext(), R.string.miss_data_candidate, Toast.LENGTH_SHORT).show()
-        }
-    }
-
+    // -------- Observers / UI --------
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
-                    binding.loadingProgressBar.isVisible = uiState.isLoading || uiState.isDeleting
-                    binding.contentScrollView.isVisible = !uiState.isLoading
-                    starMenuItem = binding.topAppBar.menu.findItem(R.id.action_star)
-                    if (uiState.errorMessage != null) {
-                        Toast.makeText(requireContext(), uiState.errorMessage, Toast.LENGTH_SHORT).show()
-                    }
-                    if (uiState.deletionErrorMessage != null) {
-                        Toast.makeText(requireContext(), uiState.deletionErrorMessage, Toast.LENGTH_LONG).show()
-                        viewModel.clearDeletionError()
-                    }
-                    if (uiState.navigateBackAfterDeletion) {
-                        findNavController().navigateUp()
-                        viewModel.onNavigationDone()
-                    }
-                    uiState.candidate?.let { candidate ->
-                        binding.topAppBar.title = "${candidate.firstName} ${candidate.lastName}"
-                        binding.candidateNotes.text = candidate.notes ?: "N/A"
+                    handleLoading(uiState)
+                    handleErrors(uiState)
+                    handleNavigation(uiState)
 
-                        val formatSalary = NumberFormat.getNumberInstance(Locale.getDefault())
-                        binding.candidateSalary.text = "${formatSalary.format(candidate.salaryEuros)} €"
-
-                        val poundsSuffix = getString(R.string.expected_salary_pounds)
-                        binding.candidateSalaryPounds.text = "$poundsSuffix ${uiState.formattedSalaryPounds}"
-
-                        val age = calculateAgeInYears(candidate.dateOfBirth)
-                        val formattedDateOfBirth = formatDateShort(candidate.dateOfBirth)
-                        val ageSuffix = getString(R.string.about_age)
-                        binding.candidateDateBirthday.text = "$formattedDateOfBirth ($age $ageSuffix)"
-                        updateStarIcon(candidate.isFavorite)
-                        if (!candidate.photoUri.isNullOrBlank()) {
-                            Glide.with(this@ResumeCandidateFragment)
-                                .load(candidate.photoUri)
-                                .placeholder(R.drawable.ic_android_black_24dp)
-                                .error(R.drawable.ic_android_black_24dp)
-                                .into(binding.candidateImage)
-                        } else {
-                            binding.candidateImage.setImageResource(R.drawable.ic_android_black_24dp)
-                        }
-                    } ?: run {
-
-                    }
+                    uiState.candidate?.let { renderCandidate(it, uiState.formattedSalaryPounds) }
                 }
             }
         }
     }
 
-    private fun initiatePhoneCall(phoneNumber: String) {
-        val intent = Intent(Intent.ACTION_DIAL).apply {
-            data = "tel:$phoneNumber".toUri()
-        }
-        try {
-            startActivity(intent)
-        } catch (e: ActivityNotFoundException) {
-            Toast.makeText(requireContext(), R.string.no_call_application, Toast.LENGTH_SHORT).show()
+    private fun handleLoading(uiState: ResumeCandidateUiState) {
+        binding.loadingProgressBar.isVisible = uiState.isLoading || uiState.isDeleting
+        binding.contentScrollView.isVisible = !uiState.isLoading
+        starMenuItem = binding.topAppBar.menu.findItem(R.id.action_star)
+    }
+
+    private fun handleErrors(uiState: ResumeCandidateUiState) {
+        uiState.errorMessage?.let {
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun initiateSms(phoneNumber: String) {
-        val intent = Intent(Intent.ACTION_SENDTO).apply {
-            data = "sms to:$phoneNumber".toUri()
-        }
-        try {
-            startActivity(intent)
-        } catch (e: ActivityNotFoundException) {
-            Toast.makeText(requireContext(), R.string.no_sms_application, Toast.LENGTH_SHORT).show()
+    private fun handleNavigation(uiState: ResumeCandidateUiState) {
+        if (uiState.navigateBackAfterDeletion) {
+            findNavController().navigateUp()
+            viewModel.onNavigationDone()
         }
     }
 
-    private fun initiateEmail(emailAddress: String) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("SetTextI18n")
+    private fun renderCandidate(candidate: Candidate, salaryPounds: String?) {
+        binding.topAppBar.title = "${candidate.firstName} ${candidate.lastName}"
+        binding.candidateNotes.text = candidate.notes ?: "N/A"
+
+        val salaryFormat = NumberFormat.getNumberInstance(Locale.getDefault())
+        val salaryText = getString(R.string.expected_salary_pounds)
+        binding.candidateSalary.text = "${salaryFormat.format(candidate.salaryEuros)} €"
+
+        binding.candidateSalaryPounds.text = "$salaryText $salaryPounds"
+
+        val age = calculateAgeInYears(candidate.dateOfBirth)
+        val dob = formatDateShort(candidate.dateOfBirth)
+        binding.candidateDateBirthday.text = "$dob ($age ${getString(R.string.about_age)})"
+
+        updateStarIcon(candidate.isFavorite)
+        renderPhoto(candidate.photoUri)
+    }
+
+    private fun renderPhoto(photoUri: String?) {
+        if (!photoUri.isNullOrBlank()) {
+            Glide.with(this)
+                .load(photoUri)
+                .placeholder(R.drawable.ic_android_black_24dp)
+                .into(binding.candidateImage)
+        } else {
+            binding.candidateImage.setImageResource(R.drawable.ic_android_black_24dp)
+        }
+    }
+
+    private fun tryStartActivity(intent: Intent, errorRes: Int) {
+        try {
+            startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(requireContext(), errorRes, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun initiatePhoneCall(phoneNumber: String) =
+        tryStartActivity(Intent(Intent.ACTION_DIAL, "tel:$phoneNumber".toUri()), R.string.no_call_application)
+
+    private fun initiateSms(phoneNumber: String) =
+        tryStartActivity(Intent(Intent.ACTION_SENDTO, "smsto:$phoneNumber".toUri()), R.string.no_sms_application)
+
+    private fun initiateEmail(email: String) {
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = "mailto:".toUri()
-            putExtra(Intent.EXTRA_EMAIL, arrayOf(emailAddress))
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
         }
-        try {
-            val value = getString(R.string.send_email)
-            startActivity(Intent.createChooser(intent, value))
-        } catch (e: ActivityNotFoundException) {
-            Toast.makeText(requireContext(), R.string.no_email_application, Toast.LENGTH_SHORT).show()
-        }
+        tryStartActivity(Intent.createChooser(intent, getString(R.string.send_email)), R.string.no_email_application)
     }
 
     private fun showDeleteConfirmationDialog() {
