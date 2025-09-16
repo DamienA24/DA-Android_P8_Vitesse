@@ -9,6 +9,10 @@ data class ResumeCandidateUiState(
 
     val isConvertingCurrency: Boolean = false,
     val formattedSalaryPounds: String? = null,
-    val conversionErrorMessage: String? = null
+    val conversionErrorMessage: String? = null,
+
+    val isDeleting: Boolean = false,
+    val deletionErrorMessage: String? = null,
+    val navigateBackAfterDeletion: Boolean = false
 
 )

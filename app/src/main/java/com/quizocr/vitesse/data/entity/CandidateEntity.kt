@@ -3,6 +3,7 @@ package com.quizocr.vitesse.data.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.quizocr.vitesse.domain.model.Candidate
 import java.time.LocalDate
 
 @Entity(tableName = "candidates")
@@ -43,4 +44,23 @@ data class CandidateEntity(
 
     @ColumnInfo(name = "updated_at")
     val updatedAt: Long = System.currentTimeMillis()
-)
+){
+    companion object {
+        fun fromDomain(domain: Candidate): CandidateEntity {
+            return CandidateEntity(
+                id = domain.id,
+                photoUri = domain.photoUri,
+                firstName = domain.firstName,
+                lastName = domain.lastName,
+                phoneNumber = domain.phoneNumber,
+                email = domain.email,
+                dateOfBirth = domain.dateOfBirth,
+                salaryEuros = domain.salaryEuros,
+                notes = domain.notes,
+                isFavorite = domain.isFavorite,
+                createdAt = domain.createdAt,
+                updatedAt = domain.updatedAt
+            )
+        }
+    }
+}

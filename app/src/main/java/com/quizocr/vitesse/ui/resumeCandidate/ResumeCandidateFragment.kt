@@ -3,13 +3,9 @@ package com.quizocr.vitesse.ui.resumeCandidate
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -32,8 +28,7 @@ import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale
 import androidx.core.net.toUri
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 @AndroidEntryPoint
 class ResumeCandidateFragment : Fragment() {
@@ -66,10 +61,8 @@ class ResumeCandidateFragment : Fragment() {
             findNavController().navigateUp()
         }
         binding.topAppBar.setOnMenuItemClickListener { menuItem ->
-            Log.d("FragmentToolbar", "Item cliqué : ${menuItem.title}, ID: ${menuItem.itemId}")
             when (menuItem.itemId) {
                 R.id.action_star -> {
-                    Log.d("FragmentToolbar", "ACTION_STAR cliqué")
                     viewModel.toggleFavoriteStatus()
                     true
                 }
@@ -78,7 +71,7 @@ class ResumeCandidateFragment : Fragment() {
                     true
                 }
                 R.id.action_delete -> {
-                    Toast.makeText(requireContext(), "Delete clicked", Toast.LENGTH_SHORT).show()
+                    showDeleteConfirmationDialog()
                     true
                 }
                 else -> false
@@ -133,11 +126,19 @@ class ResumeCandidateFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
-                    binding.loadingProgressBar.isVisible = uiState.isLoading
+                    binding.loadingProgressBar.isVisible = uiState.isLoading || uiState.isDeleting
                     binding.contentScrollView.isVisible = !uiState.isLoading
                     starMenuItem = binding.topAppBar.menu.findItem(R.id.action_star)
                     if (uiState.errorMessage != null) {
                         Toast.makeText(requireContext(), uiState.errorMessage, Toast.LENGTH_SHORT).show()
+                    }
+                    if (uiState.deletionErrorMessage != null) {
+                        Toast.makeText(requireContext(), uiState.deletionErrorMessage, Toast.LENGTH_LONG).show()
+                        viewModel.clearDeletionError()
+                    }
+                    if (uiState.navigateBackAfterDeletion) {
+                        findNavController().navigateUp()
+                        viewModel.onNavigationDone()
                     }
                     uiState.candidate?.let { candidate ->
                         binding.topAppBar.title = "${candidate.firstName} ${candidate.lastName}"
@@ -206,6 +207,16 @@ class ResumeCandidateFragment : Fragment() {
         }
     }
 
+    private fun showDeleteConfirmationDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.dialog_title_delete)
+            .setMessage(R.string.dialog_text_delete)
+            .setPositiveButton(R.string.dialog_button_confirm) { _, _ ->
+                viewModel.deleteCandidate()
+            }
+            .setNegativeButton(R.string.dialog_button_cancel, null)
+            .show()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

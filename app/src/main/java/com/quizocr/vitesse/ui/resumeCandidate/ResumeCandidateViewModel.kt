@@ -1,12 +1,10 @@
 package com.quizocr.vitesse.ui.resumeCandidate
 
-import android.icu.text.NumberFormat
-import android.util.Log
-import androidx.activity.result.launch
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.quizocr.vitesse.data.repository.DataResult
+import com.quizocr.vitesse.domain.usecase.DeleteCandidateUseCase
 import com.quizocr.vitesse.domain.usecase.GetCandidateById
 import com.quizocr.vitesse.domain.usecase.GetCurrencyConversionRateUseCase
 import com.quizocr.vitesse.domain.usecase.UpdateCandidateFavoriteStatusUseCase
@@ -21,7 +19,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,6 +26,7 @@ class ResumeCandidateViewModel @Inject constructor(
     private val getCandidateById: GetCandidateById,
     private val getCurrencyConversionRateUseCase: GetCurrencyConversionRateUseCase,
     private val updateCandidateFavoriteStatusUseCase: UpdateCandidateFavoriteStatusUseCase,
+    private val deleteCandidateUseCase: DeleteCandidateUseCase,
     savedStateHandle: SavedStateHandle) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ResumeCandidateUiState())
@@ -130,12 +128,10 @@ class ResumeCandidateViewModel @Inject constructor(
     }
 
     fun toggleFavoriteStatus() {
-        Log.d("ViewModel", "toggleFavoriteStatus CALLED - START")
         val currentCandidate = _uiState.value.candidate ?: return
         val newFavoriteStatus = !currentCandidate.isFavorite
 
         viewModelScope.launch {
-            Log.d("ViewModel", "toggleFavoriteStatus - Coroutine launched. Updating to: $newFavoriteStatus")
             when (val result = updateCandidateFavoriteStatusUseCase.execute(
                 currentCandidate.id,
                 newFavoriteStatus
@@ -146,10 +142,6 @@ class ResumeCandidateViewModel @Inject constructor(
                             currentState.copy(candidate = cand.copy(isFavorite = newFavoriteStatus))
                         } ?: currentState
                     }
-                    Log.d(
-                        "ViewModel",
-                        "Favorite status updated successfully for ${currentCandidate.id}"
-                    )
                 }
 
                 is DataResult.Error -> {
@@ -159,13 +151,44 @@ class ResumeCandidateViewModel @Inject constructor(
                                 ?: "Failed to update favorite status."
                         )
                     }
-                    Log.e(
-                        "ViewModel",
-                        "Failed to update favorite status: ${result.exception.message}"
-                    )
                 }
             }
-            Log.d("ViewModel", "toggleFavoriteStatus - Coroutine finished.")
         }
     }
+
+    fun deleteCandidate() {
+        val currentCandidate = _uiState.value.candidate ?: return
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isDeleting = true, deletionErrorMessage = null) }
+            when (val result = deleteCandidateUseCase.execute(currentCandidate)) {
+                is DataResult.Success -> {
+                    _uiState.update {
+                        it.copy(
+                            isDeleting = false,
+                            candidate = null,
+                            navigateBackAfterDeletion = true
+                        )
+                    }
+                }
+                is DataResult.Error -> {
+                    _uiState.update {
+                        it.copy(
+                            isDeleting = false,
+                            deletionErrorMessage = result.exception.message ?: "Failed to delete candidate."
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    fun onNavigationDone() {
+        _uiState.update { it.copy(navigateBackAfterDeletion = false) }
+    }
+
+    fun clearDeletionError() {
+        _uiState.update { it.copy(deletionErrorMessage = null) }
+    }
+
 }

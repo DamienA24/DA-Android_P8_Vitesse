@@ -72,6 +72,25 @@ class CandidateRepository(private val candidateDao: CandidateDao) {
             DataResult.Error(Exception("Failed to update favorite status", e))
         }
     }
+
+    /**
+     * Deletes a specific candidate from the local database.
+     * @param candidate The candidate to delete.
+     * @return DataResult indicating success or failure.
+     */
+    suspend fun deleteCandidate(candidate: Candidate): DataResult<Unit> {
+        return try {
+            withContext(Dispatchers.IO) {
+                val candidateEntity = CandidateEntity.fromDomain(candidate)
+                candidateDao.deleteCandidate(candidateEntity)
+                Log.d("CandidateRepository", "Candidate ${candidate.id} deleted successfully.")
+                DataResult.Success(Unit)
+            }
+        } catch (e: Exception) {
+            Log.e("CandidateRepository", "Failed to delete candidate ${candidate.id}", e)
+            DataResult.Error(Exception("Failed to delete candidate", e))
+        }
+    }
 }
 
 
