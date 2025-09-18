@@ -1,8 +1,7 @@
-package com.quizocr.vitesse
+package com.quizocr.vitesse.viewModelTest
 
 import app.cash.turbine.test
 import com.quizocr.vitesse.data.repository.DataResult
-import com.quizocr.vitesse.domain.model.Candidate
 import com.quizocr.vitesse.domain.model.CandidateSummary
 import com.quizocr.vitesse.domain.usecase.GetAllCandidates
 import com.quizocr.vitesse.ui.home.HomeViewModel
@@ -35,7 +34,6 @@ class HomeViewModelTest {
     private lateinit var getAllCandidatesUseCase: GetAllCandidates
     private lateinit var viewModel: HomeViewModel
 
-    private val testDate = LocalDate.of(2024, 1, 15)
     private val candidate1 = CandidateSummary(1, "", "Alice", "Smith", "111", true)
     private val candidate2 = CandidateSummary(2, "", "Bob", "Johnson", "222",  true)
     private val candidate3 = CandidateSummary(3, "", "Carol", "Smith", "333",  false)
@@ -102,7 +100,7 @@ class HomeViewModelTest {
 
     @Test
     fun `fetchAllCandidates should update uiState with loading then error from flow catch`() = runTest {
-        val exceptionMessage = "Flow collection error"
+        val exceptionMessage = "Flow collection error" //
         whenever(getAllCandidatesUseCase.execute()).thenReturn(flow { throw Exception(exceptionMessage) })
 
         viewModel.uiState.test {
@@ -110,17 +108,20 @@ class HomeViewModelTest {
 
             viewModel.fetchAllCandidates()
 
-            assertEquals(true, awaitItem().isLoading) // Loading state
+            val loadingState = awaitItem()
+            assertTrue("Expected isLoading to be true", loadingState.isLoading)
 
-            val errorState = awaitItem() // Error state from catch block
-            Assert.assertFalse(errorState.isLoading)
-            assertEquals("Unexpected error: $exceptionMessage", errorState.errorMessage)
-            assertTrue(errorState.candidates.isEmpty())
+            val errorState = awaitItem()
+            Assert.assertFalse("isLoading should be false in error state", errorState.isLoading)
+
+            val expectedErrorMessage = "Unexpected error during flow collection: $exceptionMessage"
+            assertEquals(expectedErrorMessage, errorState.errorMessage)
+
+            assertTrue("Candidates list should be empty in error state", errorState.candidates.isEmpty())
 
             cancelAndConsumeRemainingEvents()
         }
     }
-
     private suspend fun TestScope.setupViewModelWithCandidates() {
         whenever(getAllCandidatesUseCase.execute()).thenReturn(flowOf(DataResult.Success(mockCandidateList)))
         viewModel.fetchAllCandidates()
