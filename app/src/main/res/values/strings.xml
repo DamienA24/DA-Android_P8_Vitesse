@@ -46,4 +46,8 @@
     <string name="no_sms_application">No sms application found</string>
     <string name="no_email_application">No e-mail application found</string>
     <string name="send_email">Send an email with…</string>
+    <string name="add_birthday">Enter a date</string>
+    <string name="select_date">Sélectionner une date</string>
+    <string name="date_label">Date</string>
+    <string name="note_label">Note</string>
 </resources>

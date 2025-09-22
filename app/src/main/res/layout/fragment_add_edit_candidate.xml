@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="4dp"
+        app:navigationIcon="@drawable/outline_arrow_back_24"
+        app:titleTextAppearance="?attr/textAppearanceHeadline5"
+        tools:title="Ajouter un contenu" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_image_placeholder"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_marginBottom="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:id="@+id/image_placeholder_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/add_candidate"
+                        android:src="@drawable/ic_android_black_24dp" />
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_form_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="40dp" />
+
+            <!-- Form Fields -->
+
+            <ImageView
+                android:id="@+id/icon_first_name_external"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/avatar_candidate"
+                android:src="@drawable/outline_person_24"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_form_start"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_input_layout_first_name" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_input_layout_first_name"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:hint="@string/first_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/guideline_form_start"
+                app:layout_constraintTop_toBottomOf="@+id/card_image_placeholder">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_text_first_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName|textCapWords"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_input_layout_last_name"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/last_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/guideline_form_start"
+                app:layout_constraintTop_toBottomOf="@+id/text_input_layout_first_name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_text_last_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapSentences"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/icon_phone_external"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/avatar_candidate"
+                android:src="@drawable/outline_local_phone_24"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_form_start"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_input_layout_phone" />
+            
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_input_layout_phone"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/call_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/guideline_form_start"
+                app:layout_constraintTop_toBottomOf="@+id/text_input_layout_last_name"
+               >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_text_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:inputType="phone"
+                    android:maxLines="1"
+                    tools:text="08.07.88 00 16" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/icon_email_external"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/avatar_candidate"
+                android:src="@drawable/outline_mail_24"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_form_start"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_input_layout_email" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_input_layout_email"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/email_label"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/guideline_form_start"
+                app:layout_constraintTop_toBottomOf="@+id/text_input_layout_phone"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_text_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/icon_cake_external"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/avatar_candidate"
+                android:src="@drawable/outline_cake_24"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_form_start"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/card_edit_birthday" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_edit_birthday"
+                style="?attr/materialCardViewFilledStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/guideline_form_start"
+                app:layout_constraintTop_toBottomOf="@+id/text_input_layout_email">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_edit_birthday"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+                    <TextView
+                        android:id="@+id/label_select_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/select_date"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:padding="16dp"/>
+
+                    <TextView
+                        android:id="@+id/text_enter_date_prompt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_birthday"
+                        android:textAppearance="?attr/textAppearanceHeadline6"
+                        android:textColor="?attr/colorOnSurface"
+                        android:layout_marginTop="24dp"
+                        android:textSize="32sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/icon_calendar_internal"
+                        app:layout_constraintTop_toBottomOf="@+id/label_select_date"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="0dp"/>
+
+                    <ImageView
+                        android:id="@+id/icon_calendar_internal"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/outline_calendar_today_24"
+                        android:contentDescription="@string/add_birthday"
+                        android:layout_marginEnd="16dp"
+                        app:tint="?attr/colorOnSurfaceVariant"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/text_enter_date_prompt"
+                        app:layout_constraintBottom_toBottomOf="@+id/text_enter_date_prompt"
+
+                        />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/birthday_divider"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintTop_toBottomOf="@+id/text_enter_date_prompt"
+                        app:layout_constraintStart_toStartOf="@+id/layout_edit_birthday"
+                        app:layout_constraintEnd_toEndOf="@+id/layout_edit_birthday"
+                        />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_input_layout_birthday"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        app:boxStrokeWidth="2dp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:hint="@string/date_label"
+                        app:layout_constraintTop_toBottomOf="@+id/birthday_divider"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        >
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_text_birthday"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:inputType="date"
+                            android:maxLines="1"
+                            android:text="jj/mm/aaaa"
+                             />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <ImageView
+                android:id="@+id/icon_salary_external"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/avatar_candidate"
+                android:src="@drawable/outline_attach_money_24"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_form_start"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_input_layout_salary" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_input_layout_salary"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/salary"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/guideline_form_start"
+                app:layout_constraintTop_toBottomOf="@+id/card_edit_birthday"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_salary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/icon_note_external"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/avatar_candidate"
+                android:src="@drawable/outline_edit_24"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_form_start"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_input_layout_info" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_input_layout_info"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
+                android:hint="@string/note_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/guideline_form_start"
+                app:layout_constraintTop_toBottomOf="@+id/text_input_layout_salary"
+               >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_text_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:maxLines="5"
+                    android:minLines="3" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <!-- Bottom Button -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="8dp"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_submit"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="@string/save"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            app:cornerRadius="28dp" />
+    </LinearLayout>
+</LinearLayout>
