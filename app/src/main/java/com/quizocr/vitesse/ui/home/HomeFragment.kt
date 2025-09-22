@@ -1,7 +1,6 @@
 package com.quizocr.vitesse.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -72,8 +71,10 @@ class HomeFragment : Fragment() {
 
     private fun setupFloatingActionButton() {
         binding.addCandidateFab.setOnClickListener {
-            // TODO: Navigation vers l'ajout d'un nouveau candidat
-            // findNavController().navigate(R.id.action_home_to_add_candidate)
+            val action = HomeFragmentDirections.actionHomeFragmentToAddEditCandidateFragment(
+                screenTitle = getString(R.string.add_candidate)
+            )
+            findNavController().navigate(action)
         }
     }
 

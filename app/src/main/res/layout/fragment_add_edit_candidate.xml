@@ -275,8 +275,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:clickable="true"
-                            android:focusable="true"
-                            android:inputType="date"
+                            android:focusable="false"
                             android:maxLines="1"
                             android:text="jj/mm/aaaa"
                              />

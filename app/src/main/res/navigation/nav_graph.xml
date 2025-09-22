@@ -6,40 +6,55 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
-        <!-- Écran d'accueil -->
-        <fragment
-            android:id="@+id/homeFragment"
-            android:name="com.quizocr.vitesse.ui.home.HomeFragment"
-            android:label="@string/app_name"
-            tools:layout="@layout/fragment_home">
-            <action
-                android:id="@+id/action_homeFragment_to_resumeCandidateFragment"
-                app:destination="@id/resumeCandidateFragment" />
-                <!--
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right"-->
+    <!-- Écran d'accueil -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.quizocr.vitesse.ui.home.HomeFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_home"
+        >
+        <!--
+           app:enterAnim="@anim/slide_in_right"
+           app:exitAnim="@anim/slide_out_left"
+           app:popEnterAnim="@anim/slide_in_left"
+           app:popExitAnim="@anim/slide_out_right"-->
+        <action
+            android:id="@+id/action_homeFragment_to_resumeCandidateFragment"
+            app:destination="@id/resumeCandidateFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_addEditCandidateFragment"
+            app:destination="@id/addEditCandidateFragment">
+        </action>
 
-        </fragment>
+    </fragment>
+    <!-- Écran de résumé du candidat -->
+    <fragment
+        android:id="@+id/resumeCandidateFragment"
+        android:name="com.quizocr.vitesse.ui.resumeCandidate.ResumeCandidateFragment"
+        android:label="@string/resume_candidate"
+        tools:layout="@layout/fragment_resume_candidate" >
+        <argument
+            android:name="candidateId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_resumeCandidateFragment_to_addEditCandidateFragment"
+            app:destination="@id/addEditCandidateFragment">
+        </action>
+    </fragment>
 
-        <!-- Écran d'ajout de candidat
-        <fragment
-            android:id="@+id/addCandidateFragment"
-            android:name="com.quizocr.vitesse.ui.addCandidate.AddCandidateFragment"
-            android:label="Ajouter un candidat"
-            tools:layout="@layout/fragment_add_candidate" />-->
-
-        <fragment
-            android:id="@+id/resumeCandidateFragment"
-            android:name="com.quizocr.vitesse.ui.resumeCandidate.ResumeCandidateFragment"
-            android:label="@string/resume_candidate"
-            tools:layout="@layout/fragment_resume_candidate" >
-            <argument
-                android:name="candidateId"
-                app:argType="integer" />
-        </fragment>
-
-    </navigation>
-
-
+    <!-- Écran d'ajout ou d'édition d'un candidat -->
+    <fragment
+        android:id="@+id/addEditCandidateFragment"
+        android:name="com.quizocr.vitesse.ui.addEditCandidate.AddEditCandidateFragment"
+        android:label="{screenTitle}"
+        tools:layout="@layout/fragment_add_edit_candidate">
+        <argument
+            android:name="candidateId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="screenTitle"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+</navigation>

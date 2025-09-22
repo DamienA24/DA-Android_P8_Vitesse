@@ -21,6 +21,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.quizocr.vitesse.R
 import com.quizocr.vitesse.databinding.FragmentResumeCandidateBinding
 import com.quizocr.vitesse.domain.model.Candidate
+import com.quizocr.vitesse.ui.home.HomeFragmentDirections
 import com.quizocr.vitesse.utils.calculateAgeInYears
 import com.quizocr.vitesse.utils.formatDateShort
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,6 +69,7 @@ class ResumeCandidateFragment : Fragment() {
             }
             R.id.action_edit -> {
                 //
+                navigateToEditScreen()
                 true
             }
             R.id.action_delete -> {
@@ -214,6 +216,14 @@ class ResumeCandidateFragment : Fragment() {
             }
             .setNegativeButton(R.string.dialog_button_cancel, null)
             .show()
+    }
+
+    private fun navigateToEditScreen() {
+        val action = ResumeCandidateFragmentDirections.actionResumeCandidateFragmentToAddEditCandidateFragment(
+            screenTitle = getString(R.string.title_edit_candidate)
+            , candidateId = viewModel.candidateId
+        )
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {

@@ -26,7 +26,7 @@ class ResumeCandidateViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(ResumeCandidateUiState())
     val uiState: StateFlow<ResumeCandidateUiState> = _uiState.asStateFlow()
-    private val candidateId: Int = savedStateHandle["candidateId"] ?: -1
+    val candidateId: Int = savedStateHandle["candidateId"] ?: -1
     private var salaryConversionLaunched = false
 
     init {
