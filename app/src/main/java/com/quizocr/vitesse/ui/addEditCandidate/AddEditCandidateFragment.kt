@@ -1,5 +1,8 @@
 package com.quizocr.vitesse.ui.addEditCandidate
 
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
+import android.icu.util.TimeZone
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -18,6 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.quizocr.vitesse.R
 import com.quizocr.vitesse.databinding.FragmentAddEditCandidateBinding
 import com.quizocr.vitesse.domain.model.Candidate
@@ -25,6 +29,8 @@ import com.quizocr.vitesse.utils.formatDateShort
 import com.quizocr.vitesse.utils.formatSalaryLocale
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.time.ZoneId
+import kotlin.text.format
 
 @AndroidEntryPoint
 class AddEditCandidateFragment : Fragment() {
@@ -37,6 +43,7 @@ class AddEditCandidateFragment : Fragment() {
     private lateinit var pickImageLauncher: ActivityResultLauncher<String>
 
     private var selectedImageUri: Uri? = null
+    private var selectedBirthdayInMillis: Long? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,11 +105,43 @@ class AddEditCandidateFragment : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupClickListeners()= with(binding) {
         cardImagePlaceholder.setOnClickListener {
             openImagePicker()
         }
+
+        editTextBirthday.setOnClickListener {
+            showBirthdayDatePicker()
+        }
         // binding.btnSubmit.setOnClickListener { saveCandidateData() }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun showBirthdayDatePicker() {
+        val datePickerBuilder = MaterialDatePicker.Builder.datePicker()
+            .setTitleText(getString(R.string.anniversary))
+
+         viewModel.uiState.value.candidate?.dateOfBirth?.let { localDateDob ->
+             val zonedDateTimeUtc = localDateDob.atStartOfDay(ZoneId.of("UTC"))
+             val millisUtc = zonedDateTimeUtc.toInstant().toEpochMilli()
+            datePickerBuilder.setSelection(millisUtc)
+         }
+
+        val datePicker = datePickerBuilder.build()
+
+        datePicker.addOnPositiveButtonClickListener { selection ->
+            selectedBirthdayInMillis = selection
+
+            val outputDateFormat = SimpleDateFormat(
+                "dd/MM/yyyy",
+                java.util.Locale.getDefault()
+            )
+            val formattedDate = outputDateFormat.format(selection)
+            binding.editTextBirthday.setText(formattedDate)
+        }
+
+        datePicker.show(parentFragmentManager, "BIRTHDAY_DATE_PICKER_TAG")
     }
 
     private fun updateLoadingState(isViewModelLoadingData: Boolean) {
