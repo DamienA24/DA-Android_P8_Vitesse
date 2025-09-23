@@ -21,6 +21,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.quizocr.vitesse.R
 import com.quizocr.vitesse.databinding.FragmentAddEditCandidateBinding
@@ -122,11 +124,20 @@ class AddEditCandidateFragment : Fragment() {
         val datePickerBuilder = MaterialDatePicker.Builder.datePicker()
             .setTitleText(getString(R.string.anniversary))
 
-         viewModel.uiState.value.candidate?.dateOfBirth?.let { localDateDob ->
-             val zonedDateTimeUtc = localDateDob.atStartOfDay(ZoneId.of("UTC"))
-             val millisUtc = zonedDateTimeUtc.toInstant().toEpochMilli()
-            datePickerBuilder.setSelection(millisUtc)
-         }
+        val constraintsBuilder = CalendarConstraints.Builder()
+        constraintsBuilder.setValidator(DateValidatorPointBackward.now())
+        datePickerBuilder.setCalendarConstraints(constraintsBuilder.build())
+
+
+        selectedBirthdayInMillis?.let {
+            datePickerBuilder.setSelection(it)
+        } ?: run {
+            viewModel.uiState.value.candidate?.dateOfBirth?.let { localDateDob ->
+                    val zonedDateTimeUtc = localDateDob.atStartOfDay(ZoneId.of("UTC"))
+                    val millisUtc = zonedDateTimeUtc.toInstant().toEpochMilli()
+                    datePickerBuilder.setSelection(millisUtc)
+            }
+        }
 
         val datePicker = datePickerBuilder.build()
 
