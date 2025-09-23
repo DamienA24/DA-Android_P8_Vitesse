@@ -24,6 +24,7 @@ import com.quizocr.vitesse.domain.model.Candidate
 import com.quizocr.vitesse.ui.home.HomeFragmentDirections
 import com.quizocr.vitesse.utils.calculateAgeInYears
 import com.quizocr.vitesse.utils.formatDateShort
+import com.quizocr.vitesse.utils.formatSalaryLocale
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -160,9 +161,9 @@ class ResumeCandidateFragment : Fragment() {
         binding.topAppBar.title = "${candidate.firstName} ${candidate.lastName}"
         binding.candidateNotes.text = candidate.notes ?: "N/A"
 
-        val salaryFormat = NumberFormat.getNumberInstance(Locale.getDefault())
+        val salaryFormat = formatSalaryLocale(candidate.salaryEuros)
         val salaryText = getString(R.string.expected_salary_pounds)
-        binding.candidateSalary.text = "${salaryFormat.format(candidate.salaryEuros)} €"
+        binding.candidateSalary.text = "$salaryFormat €"
 
         binding.candidateSalaryPounds.text = "$salaryText $salaryPounds"
 

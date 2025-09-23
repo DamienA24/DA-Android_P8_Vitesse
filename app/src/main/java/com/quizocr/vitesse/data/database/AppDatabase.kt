@@ -65,7 +65,7 @@ abstract class AppDatabase : RoomDatabase() {
         suspend fun populateDatabase(candidateDao: CandidateDao) {
             candidateDao.insertCandidate(
                 CandidateEntity(
-                    photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/17.jpg", // ou votre URI
+                    photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/17.jpg",
                     firstName = "John",
                     lastName = "Doe",
                     phoneNumber = "1234567890",
@@ -79,13 +79,13 @@ abstract class AppDatabase : RoomDatabase() {
 
             candidateDao.insertCandidate(
                 CandidateEntity(
-                    photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/72.jpg", // ou votre URI
+                    photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/72.jpg",
                     firstName = "John",
                     lastName = "Wick",
                     phoneNumber = "1234567890",
                     email = "john.c.calhoun@examplepetstore.com",
                     dateOfBirth = LocalDate.of(1998, 5, 15),
-                    salaryEuros = 5000.0,
+                    salaryEuros = 3500.50,
                     notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eleifend volutpat scelerisque. Vestibulum tincidunt mauris purus, bibendum tincidunt est viverra non. Maecenas eget nunc diam. Cras enim urna, dictum at ex eget, pulvinar lobortis enim. Nullam nec turpis eros. Etiam consectetur nunc justo, ut rutrum ligula ornare a. Fusce augue velit, ornare quis imperdiet ut, vehicula venenatis ante. Nulla at accumsan velit. Nullam venenatis rhoncus augue eu imperdiet. Sed aliquet neque ac ante porta semper.",
                     isFavorite = false,
                 )
@@ -93,7 +93,7 @@ abstract class AppDatabase : RoomDatabase() {
 
             candidateDao.insertCandidate(
                 CandidateEntity(
-                    photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/19.jpg", // ou votre URI
+                    photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/19.jpg",
                     firstName = "bob",
                     lastName = "commando",
                     phoneNumber = "1234567890",
