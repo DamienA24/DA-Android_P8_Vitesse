@@ -1,11 +1,14 @@
 package com.quizocr.vitesse.ui.addEditCandidate
 
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -31,6 +34,15 @@ class AddEditCandidateFragment : Fragment() {
     private var _binding: FragmentAddEditCandidateBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var pickImageLauncher: ActivityResultLauncher<String>
+
+    private var selectedImageUri: Uri? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setupImagePickers()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,7 +56,7 @@ class AddEditCandidateFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupObservers()
-        // TODO: Configurer les listeners pour la sauvegarde du formulaire
+        setupClickListeners()
     }
 
     private fun setupToolbar() = with(binding.toolbar) {
@@ -57,15 +69,14 @@ class AddEditCandidateFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
                     updateLoadingState(uiState.isLoadingCandidateData)
-
                     binding.toolbar.title = uiState.screenTitle
 
                     uiState.candidate?.let {
                         renderCandidateDetails(it)
+                        loadCandidateImage(it.photoUri)
                     } ?: run {
                         if (!uiState.isLoadingCandidateData) {
                             clearForm()
-                            renderPhoto(null)
                         }
                     }
 
@@ -76,6 +87,22 @@ class AddEditCandidateFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun setupImagePickers() {
+        pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                selectedImageUri = it
+                loadImageIntoView(it)
+            }
+        }
+    }
+
+    private fun setupClickListeners()= with(binding) {
+        cardImagePlaceholder.setOnClickListener {
+            openImagePicker()
+        }
+        // binding.btnSubmit.setOnClickListener { saveCandidateData() }
     }
 
     private fun updateLoadingState(isViewModelLoadingData: Boolean) {
@@ -93,18 +120,28 @@ class AddEditCandidateFragment : Fragment() {
         binding.editTextBirthday.setText(formatDateShort(candidate.dateOfBirth))
         binding.editSalary.setText(formatSalaryLocale(candidate.salaryEuros))
 
-        renderPhoto(candidate.photoUri)
     }
 
-    private fun renderPhoto(photoUri: String?) {
-        if (!photoUri.isNullOrBlank()) {
+    private fun loadCandidateImage(photoUri: String?) {
+        if (selectedImageUri == null && !photoUri.isNullOrBlank()) {
             Glide.with(this)
                 .load(photoUri)
                 .placeholder(R.drawable.ic_android_black_24dp)
+                .error(R.drawable.ic_android_black_24dp)
                 .into(binding.candidateImage)
-        } else {
-            binding.candidateImage.setImageResource(R.drawable.ic_android_black_24dp)
         }
+    }
+
+    private fun loadImageIntoView(uri: Uri) {
+        Glide.with(this)
+            .load(uri)
+            .placeholder(R.drawable.ic_android_black_24dp)
+            .error(R.drawable.ic_android_black_24dp)
+            .into(binding.candidateImage)
+    }
+
+    private fun openImagePicker() {
+        pickImageLauncher.launch("image/*")
     }
 
     private fun clearForm(){

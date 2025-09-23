@@ -45,20 +45,20 @@
                     style="?attr/materialCardViewFilledStyle"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:clickable="true"
+                    android:focusable="true">
 
                     <LinearLayout
                         android:id="@+id/image_placeholder_container"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="?attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
                         android:gravity="center"
                         android:orientation="vertical">
 
                         <ImageView
-                            android:id="@+id/candidateImage"
+                            android:id="@+id/candidate_image"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:contentDescription="@string/add_candidate"
