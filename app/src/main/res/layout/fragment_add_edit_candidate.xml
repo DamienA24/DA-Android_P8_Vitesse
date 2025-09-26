@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/primaryVariant"
     android:orientation="vertical">
 
     <!-- Toolbar -->
@@ -41,7 +42,7 @@
                     android:layout_width="0dp"
                     android:layout_height="200dp"
                     android:layout_marginBottom="24dp"
-                    app:cardBackgroundColor="@color/primary"
+                    app:cardBackgroundColor="@color/primaryVariant"
                     style="?attr/materialCardViewFilledStyle"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -90,11 +91,13 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/text_input_layout_first_name"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
                     android:hint="@string/first_name"
+                    android:textColorHint="@color/colorOnPrimary"
+                    app:boxStrokeColor="@color/colorOnPrimary"
+                    app:hintTextColor="@color/colorOnPrimary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/guideline_form_start"
                     app:layout_constraintTop_toBottomOf="@+id/card_image_placeholder">
@@ -103,6 +106,7 @@
                         android:id="@+id/edit_text_first_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/colorOnPrimary"
                         android:inputType="textPersonName|textCapWords"
                         android:maxLines="1" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -114,6 +118,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/last_name"
+                    android:textColorHint="@color/colorOnPrimary"
+                    app:boxStrokeColor="@color/colorOnPrimary"
+                    app:hintTextColor="@color/colorOnPrimary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/guideline_form_start"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_first_name">
@@ -122,6 +129,7 @@
                         android:id="@+id/edit_text_last_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/colorOnPrimary"
                         android:inputType="textCapSentences"
                         android:maxLines="1" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -145,6 +153,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/call_label"
+                    android:textColorHint="@color/colorOnPrimary"
+                    app:boxStrokeColor="@color/colorOnPrimary"
+                    app:hintTextColor="@color/colorOnPrimary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/guideline_form_start"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_last_name"
@@ -157,6 +168,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:inputType="phone"
+                        android:textColor="@color/colorOnPrimary"
                         android:maxLines="1"
                         tools:text="08.07.88 00 16" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -180,6 +192,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/email_label"
+                    android:textColorHint="@color/colorOnPrimary"
+                    app:boxStrokeColor="@color/colorOnPrimary"
+                    app:hintTextColor="@color/colorOnPrimary"
                     app:errorEnabled="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/guideline_form_start"
@@ -190,6 +205,7 @@
                         android:id="@+id/edit_text_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/colorOnPrimary"
                         android:inputType="textEmailAddress"
                         android:maxLines="1" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -211,6 +227,7 @@
                     style="?attr/materialCardViewFilledStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/primary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/guideline_form_start"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_email">
@@ -225,7 +242,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/select_date"
                             android:textAppearance="?attr/textAppearanceCaption"
-                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:textColor="@color/colorOnPrimary"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             android:padding="16dp"/>
@@ -236,7 +253,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/add_birthday"
                             android:textAppearance="?attr/textAppearanceHeadline6"
-                            android:textColor="?attr/colorOnSurface"
+                            android:textColor="@color/colorOnPrimary"
                             android:layout_marginTop="24dp"
                             android:textSize="32sp"
                             app:layout_constraintStart_toStartOf="parent"
@@ -252,7 +269,7 @@
                             android:src="@drawable/outline_calendar_today_24"
                             android:contentDescription="@string/add_birthday"
                             android:layout_marginEnd="16dp"
-                            app:tint="?attr/colorOnSurfaceVariant"
+                            app:tint="@color/colorOnPrimary"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="@+id/text_enter_date_prompt"
                             app:layout_constraintBottom_toBottomOf="@+id/text_enter_date_prompt"
@@ -277,6 +294,9 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="16dp"
                             android:hint="@string/date_label"
+                            android:textColorHint="@color/colorOnPrimary"
+                            app:boxStrokeColor="@color/colorOnPrimary"
+                            app:hintTextColor="@color/colorOnPrimary"
                             app:layout_constraintTop_toBottomOf="@+id/birthday_divider"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -287,6 +307,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:clickable="true"
+                                android:textColor="@color/colorOnPrimary"
                                 android:focusable="false"
                                 android:maxLines="1"
                                 android:text="jj/mm/aaaa"
@@ -315,6 +336,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/salary"
+                    android:textColorHint="@color/colorOnPrimary"
+                    app:boxStrokeColor="@color/colorOnPrimary"
+                    app:hintTextColor="@color/colorOnPrimary"
                     app:errorEnabled="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/guideline_form_start"
@@ -325,6 +349,7 @@
                         android:id="@+id/edit_salary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/colorOnPrimary"
                         android:inputType="numberDecimal"
                         android:maxLines="1" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -349,6 +374,9 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="24dp"
                     android:hint="@string/note_label"
+                    android:textColorHint="@color/colorOnPrimary"
+                    app:boxStrokeColor="@color/colorOnPrimary"
+                    app:hintTextColor="@color/colorOnPrimary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/guideline_form_start"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_salary"
@@ -358,6 +386,7 @@
                         android:id="@+id/edit_text_info"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/colorOnPrimary"
                         android:inputType="textMultiLine|textCapSentences"
                         android:maxLines="5"
                         android:minLines="3" />
@@ -383,6 +412,7 @@
                 android:layout_height="56dp"
                 android:text="@string/save"
                 android:textAllCaps="false"
+                android:backgroundTint="@color/secondary"
                 android:textSize="16sp"
                 app:cornerRadius="28dp" />
         </LinearLayout>
