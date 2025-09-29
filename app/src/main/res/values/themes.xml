@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Vitesse" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="android:windowBackground">@color/primary</item>
+        <item name="android:windowBackground">@color/primaryVariant</item>
     </style>
 
     <style name="Theme.Vitesse" parent="Base.Theme.Vitesse" />

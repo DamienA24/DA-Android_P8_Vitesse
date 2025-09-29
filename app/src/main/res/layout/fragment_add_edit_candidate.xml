@@ -227,7 +227,6 @@
                     style="?attr/materialCardViewFilledStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/primary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/guideline_form_start"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_email">
@@ -242,7 +241,6 @@
                             android:layout_height="wrap_content"
                             android:text="@string/select_date"
                             android:textAppearance="?attr/textAppearanceCaption"
-                            android:textColor="@color/colorOnPrimary"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             android:padding="16dp"/>
@@ -253,7 +251,6 @@
                             android:layout_height="wrap_content"
                             android:text="@string/add_birthday"
                             android:textAppearance="?attr/textAppearanceHeadline6"
-                            android:textColor="@color/colorOnPrimary"
                             android:layout_marginTop="24dp"
                             android:textSize="32sp"
                             app:layout_constraintStart_toStartOf="parent"
@@ -269,7 +266,6 @@
                             android:src="@drawable/outline_calendar_today_24"
                             android:contentDescription="@string/add_birthday"
                             android:layout_marginEnd="16dp"
-                            app:tint="@color/colorOnPrimary"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="@+id/text_enter_date_prompt"
                             app:layout_constraintBottom_toBottomOf="@+id/text_enter_date_prompt"
