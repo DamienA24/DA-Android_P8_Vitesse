@@ -115,7 +115,13 @@ class AddEditCandidateViewModel @Inject constructor(
 
             when (result) {
                 is DataResult.Success -> {
-                    _uiState.update { it.copy(isSaving = false, saveSuccess = true) }
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isSaving = false,
+                            saveSuccess = true,
+                            candidate = if (candidateId != -1) candidateToSave else currentState.candidate
+                        )
+                    }
                 }
                 is DataResult.Error -> {
                     _uiState.update {
