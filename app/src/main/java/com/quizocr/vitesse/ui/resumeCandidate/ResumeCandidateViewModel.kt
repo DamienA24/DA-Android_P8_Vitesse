@@ -55,6 +55,10 @@ class ResumeCandidateViewModel @Inject constructor(
         }
         if (!salaryConversionLaunched && candidate.salaryEuros > 0) {
             convertSalaryToPounds(candidate.salaryEuros)
+        } else {
+            _uiState.update {
+                it.copy(isLoading = false)
+            }
         }
     }
 
