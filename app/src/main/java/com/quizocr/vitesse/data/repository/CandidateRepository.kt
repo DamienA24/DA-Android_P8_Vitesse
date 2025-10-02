@@ -21,10 +21,6 @@ class CandidateRepository(private val candidateDao: CandidateDao) {
      fun allCandidates(): Flow<DataResult<List<CandidateSummary>>> {
         return candidateDao.getAllCandidates() //
             .map { summaryList ->
-                Log.d(
-                    "CandidateRepository",
-                    "Fetched candidate summaries from database: $summaryList"
-                )
                 DataResult.Success(summaryList) as DataResult<List<CandidateSummary>>
             }
             .catch { e ->
@@ -68,7 +64,6 @@ class CandidateRepository(private val candidateDao: CandidateDao) {
                 DataResult.Success(Unit)
             }
         } catch (e: Exception) {
-            Log.e("CandidateRepository", "Failed to update favorite status for $candidateId", e)
             DataResult.Error(Exception("Failed to update favorite status", e))
         }
     }
@@ -83,12 +78,44 @@ class CandidateRepository(private val candidateDao: CandidateDao) {
             withContext(Dispatchers.IO) {
                 val candidateEntity = CandidateEntity.fromDomain(candidate)
                 candidateDao.deleteCandidate(candidateEntity)
-                Log.d("CandidateRepository", "Candidate ${candidate.id} deleted successfully.")
                 DataResult.Success(Unit)
             }
         } catch (e: Exception) {
-            Log.e("CandidateRepository", "Failed to delete candidate ${candidate.id}", e)
             DataResult.Error(Exception("Failed to delete candidate", e))
+        }
+    }
+
+    /**
+     * Adds a new candidate to the local database.
+     * @param candidate The candidate to add.
+     * @return DataResult containing the ID of the newly added candidate or an error.
+     */
+    suspend fun addCandidate(candidate: Candidate): DataResult<Unit>  {
+        return try {
+            withContext(Dispatchers.IO) {
+                val candidateEntity = CandidateEntity.fromDomain(candidate)
+                val newId = candidateDao.insertCandidate(candidateEntity)
+                DataResult.Success(newId)
+            }
+        } catch (e: Exception) {
+            DataResult.Error(Exception("Failed to add candidate", e))
+        }
+    }
+
+    /**
+     * Updates an existing candidate in the local database.
+     * @param candidate The candidate to update.
+     * @return DataResult containing the number of rows updated or an error.
+     */
+    suspend fun updateCandidate(candidate: Candidate): DataResult<Unit> {
+        return try {
+            withContext(Dispatchers.IO) {
+                val candidateEntity = CandidateEntity.fromDomain(candidate)
+                val updatedRows = candidateDao.updateCandidate(candidateEntity)
+                DataResult.Success(updatedRows)
+            }
+        } catch (e: Exception) {
+            DataResult.Error(Exception("Failed to update candidate ${candidate.id}", e))
         }
     }
 }
