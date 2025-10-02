@@ -1,11 +1,12 @@
 package com.quizocr.vitesse.ui.addEditCandidate
 
+import android.icu.text.NumberFormat
 import android.icu.text.SimpleDateFormat
-import android.icu.util.Calendar
-import android.icu.util.TimeZone
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,8 +32,13 @@ import com.quizocr.vitesse.utils.formatDateShort
 import com.quizocr.vitesse.utils.formatSalaryLocale
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.ZoneId
-import kotlin.text.format
+import kotlin.time.ExperimentalTime
+import androidx.core.net.toUri
+import androidx.navigation.NavOptions
+import com.quizocr.vitesse.utils.parseFormattedSalaryString
+import java.util.Locale
 
 @AndroidEntryPoint
 class AddEditCandidateFragment : Fragment() {
@@ -79,12 +85,18 @@ class AddEditCandidateFragment : Fragment() {
                 viewModel.uiState.collect { uiState ->
                     updateLoadingState(uiState.isLoadingCandidateData)
                     binding.toolbar.title = uiState.screenTitle
+                    binding.btnSubmit.isClickable = !uiState.isSaving
 
-                    uiState.candidate?.let {
-                        renderCandidateDetails(it)
-                        loadCandidateImage(it.photoUri)
-                    } ?: run {
-                        if (!uiState.isLoadingCandidateData) {
+                    if(uiState.saveSuccess) {
+                        returnHome()
+                        return@collect
+                    }
+
+                    if(!uiState.isSaving && !uiState.isLoadingCandidateData) {
+                        if (uiState.candidate != null) {
+                            renderCandidateDetails(uiState.candidate)
+                            loadCandidateImage(uiState.candidate.photoUri)
+                        } else {
                             clearForm()
                         }
                     }
@@ -116,7 +128,8 @@ class AddEditCandidateFragment : Fragment() {
         editTextBirthday.setOnClickListener {
             showBirthdayDatePicker()
         }
-        // binding.btnSubmit.setOnClickListener { saveCandidateData() }
+        btnSubmit.setOnClickListener { validateAndSaveCandidate() }
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -133,9 +146,9 @@ class AddEditCandidateFragment : Fragment() {
             datePickerBuilder.setSelection(it)
         } ?: run {
             viewModel.uiState.value.candidate?.dateOfBirth?.let { localDateDob ->
-                    val zonedDateTimeUtc = localDateDob.atStartOfDay(ZoneId.of("UTC"))
-                    val millisUtc = zonedDateTimeUtc.toInstant().toEpochMilli()
-                    datePickerBuilder.setSelection(millisUtc)
+                val zonedDateTimeUtc = localDateDob.atStartOfDay(ZoneId.of("UTC"))
+                val millisUtc = zonedDateTimeUtc.toInstant().toEpochMilli()
+                datePickerBuilder.setSelection(millisUtc)
             }
         }
 
@@ -143,7 +156,6 @@ class AddEditCandidateFragment : Fragment() {
 
         datePicker.addOnPositiveButtonClickListener { selection ->
             selectedBirthdayInMillis = selection
-
             val outputDateFormat = SimpleDateFormat(
                 "dd/MM/yyyy",
                 java.util.Locale.getDefault()
@@ -168,6 +180,7 @@ class AddEditCandidateFragment : Fragment() {
         binding.editTextEmail.setText(candidate.email)
         binding.editTextInfo.setText(candidate.notes)
         binding.editTextBirthday.setText(formatDateShort(candidate.dateOfBirth))
+        selectedBirthdayInMillis = candidate.dateOfBirth.atStartOfDay(ZoneId.of("UTC")).toInstant().toEpochMilli()
         binding.editSalary.setText(formatSalaryLocale(candidate.salaryEuros))
 
     }
@@ -179,6 +192,7 @@ class AddEditCandidateFragment : Fragment() {
                 .placeholder(R.drawable.ic_android_black_24dp)
                 .error(R.drawable.ic_android_black_24dp)
                 .into(binding.candidateImage)
+            selectedImageUri = photoUri.toUri()
         }
     }
 
@@ -202,6 +216,90 @@ class AddEditCandidateFragment : Fragment() {
         binding.editTextInfo.setText("")
         binding.editTextBirthday.setText("")
         binding.editSalary.setText("")
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    @OptIn(ExperimentalTime::class)
+    private fun validateAndSaveCandidate() {
+        val firstName = binding.editTextFirstName.text.toString().trim()
+        val lastName = binding.editTextLastName.text.toString().trim()
+        val phone = binding.editPhone.text.toString().trim()
+        val email = binding.editTextEmail.text.toString().trim()
+
+        var isValid = true
+
+        if (firstName.isEmpty()) {
+            binding.textInputLayoutFirstName.error = getString(R.string.mandatory_field)
+            isValid = false
+        } else {
+            binding.textInputLayoutFirstName.error = null
+        }
+
+        if (lastName.isEmpty()) {
+            binding.textInputLayoutLastName.error = getString(R.string.mandatory_field)
+            isValid = false
+        } else {
+            binding.textInputLayoutLastName.error = null
+        }
+
+        if (phone.isEmpty()) {
+            binding.textInputLayoutPhone.error = getString(R.string.mandatory_field)
+            isValid = false
+        } else {
+            binding.textInputLayoutPhone.error = null
+        }
+
+        if (email.isEmpty()) {
+            binding.textInputLayoutEmail.error = getString(R.string.mandatory_field)
+            isValid = false
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            binding.textInputLayoutEmail.error = getString(R.string.invalid_format)
+            isValid = false
+        } else {
+            binding.textInputLayoutEmail.error = null
+        }
+
+        if (selectedBirthdayInMillis == null) {
+            binding.textInputLayoutBirthday.error = getString(R.string.mandatory_field)
+            isValid = false
+        } else {
+            binding.textInputLayoutBirthday.error = null
+        }
+
+        if (isValid) {
+            val dateOfBirthToSave: LocalDate = java.time.Instant.ofEpochMilli(selectedBirthdayInMillis!!)
+                .atZone(ZoneId.of("UTC"))
+                .toLocalDate()
+
+            val salaryString = binding.editSalary.text.toString()
+            val salaryDouble = parseFormattedSalaryString(salaryString, Locale.getDefault())
+
+            val notes = binding.editTextInfo.text.toString().trim()
+            val photoUriString = selectedImageUri?.toString()
+
+            viewModel.saveCandidate(
+                firstName = firstName,
+                lastName = lastName,
+                phoneNumber = phone,
+                email = email,
+                dateOfBirth = dateOfBirthToSave,
+                salary = salaryDouble,
+                notes = notes,
+                photoUri = photoUriString
+            )
+
+        }
+    }
+
+    private fun returnHome() {
+        val navOptions = NavOptions.Builder()
+            .setPopUpTo(R.id.homeFragment, true)
+            .build()
+        try {
+            findNavController().navigate(R.id.homeFragment, null, navOptions)
+        } catch (e: IllegalArgumentException) {
+            findNavController().navigateUp()
+        }
     }
 
     override fun onDestroyView() {

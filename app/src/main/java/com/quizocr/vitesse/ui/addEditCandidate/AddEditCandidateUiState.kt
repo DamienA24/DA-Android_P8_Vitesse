@@ -6,5 +6,7 @@ data class AddEditCandidateUiState(
     val candidate: Candidate? = null,
     val isLoadingCandidateData: Boolean = false,
     val errorMessage: String? = null,
-    val screenTitle: String = ""
+    val screenTitle: String = "",
+    val isSaving: Boolean = false,
+    val saveSuccess: Boolean = false
 )
