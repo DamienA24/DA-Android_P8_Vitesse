@@ -6,4 +6,7 @@
     </style>
 
     <style name="Theme.Vitesse" parent="Base.Theme.Vitesse" />
+    <style name="MyToolbarTitle" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
 </resources>

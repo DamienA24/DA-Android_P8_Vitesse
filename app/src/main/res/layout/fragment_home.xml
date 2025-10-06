@@ -19,6 +19,10 @@
             android:hint="@string/search_candidate"
             app:endIconMode="custom"
             app:endIconDrawable="@drawable/outline_search_24"
+            app:endIconTint="@color/textColorAlternative"
+            app:boxStrokeColor="@android:color/black"
+            app:hintTextColor="@android:color/black"
+            android:textColorHint="@color/textColorAlternative"
             app:boxCornerRadiusTopStart="24dp"
             app:boxCornerRadiusTopEnd="24dp"
             app:boxCornerRadiusBottomEnd="24dp"
@@ -29,6 +33,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/textColorAlternative"
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -39,7 +44,7 @@
             android:layout_height="wrap_content"
             android:background="@color/secondary"
             app:tabIndicatorColor="@color/primary"
-            app:tabTextColor="@color/colorOnSecondary"
+            app:tabTextColor="@color/textColorAlternative"
             />
 
 

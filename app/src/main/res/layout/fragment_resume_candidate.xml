@@ -21,7 +21,8 @@
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/topAppBar"
                 app:navigationIcon="@drawable/outline_arrow_back_24"
-                app:titleTextAppearance="?attr/textAppearanceHeadline5"
+                app:titleTextAppearance="@style/MyToolbarTitle"
+                app:navigationContentDescription="@string/back_button_description"
                 app:menu="@menu/resume_candidate_menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -86,7 +87,9 @@
                         android:text="@string/call_label"
                         android:gravity="center"
                         android:clickable="false"
-                        android:focusable="false"/>
+                        android:focusable="false"
+                        android:textColor="@android:color/black"
+                        />
                 </LinearLayout>
 
                 <LinearLayout
@@ -131,7 +134,9 @@
                         android:text="@string/sms_label"
                         android:gravity="center"
                         android:clickable="false"
-                        android:focusable="false"/>
+                        android:focusable="false"
+                        android:textColor="@android:color/black"
+                        />
                 </LinearLayout>
 
                 <LinearLayout
@@ -176,7 +181,9 @@
                         android:text="@string/email_label"
                         android:gravity="center"
                         android:clickable="false"
-                        android:focusable="false"/>
+                        android:focusable="false"
+                        android:textColor="@android:color/black"
+                        />
                 </LinearLayout>
 
             </LinearLayout>
@@ -199,26 +206,26 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
                         android:text="@string/about_title"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="12dp" />
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/candidateDateBirthday"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
                         android:textColor="@android:color/black"
                         android:textSize="14sp"
-                        android:layout_marginBottom="4dp"
-                        tools:text="03/03/1989 (34 ans)"/>
+                        tools:text="03/03/1989 (34 ans)" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/anniversary"
-                        android:textColor="#666666"
+                        android:textColor="@android:color/black"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -262,7 +269,7 @@
                         android:id="@+id/candidateSalaryPounds"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#666666"
+                        android:textColor="@android:color/black"
                         android:textSize="14sp"
                         tools:text="soit £ 3026,99"
                         />
