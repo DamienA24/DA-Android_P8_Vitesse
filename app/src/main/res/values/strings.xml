@@ -47,7 +47,7 @@
     <string name="no_email_application">No e-mail application found</string>
     <string name="send_email">Send an email with…</string>
     <string name="add_birthday">Enter a date</string>
-    <string name="select_date">Sélectionner une date</string>
+    <string name="select_date">Select a date</string>
     <string name="date_label">Date</string>
     <string name="note_label">Note</string>
     <string name="add_image_candidate">add candidate image</string>
