@@ -4,18 +4,18 @@ import com.quizocr.vitesse.data.entity.CandidateEntity
 import java.time.LocalDate
 
 data class Candidate(
-    val id: Int,
+    val id: Int = 0,
     val photoUri: String? = null,
     val firstName: String,
     val lastName: String,
     val phoneNumber: String,
     val email: String,
     val dateOfBirth: LocalDate,
-    val salaryEuros: Double,
+    val salaryEuros: Double = 0.0,
     val notes: String? = null,
-    val isFavorite: Boolean,
-    val createdAt: Long,
-    val updatedAt: Long
+    val isFavorite: Boolean = false,
+    val createdAt: Long = System.currentTimeMillis(),
+    val updatedAt: Long = System.currentTimeMillis()
 ) {
     companion object {
         fun fromEntity(entity: CandidateEntity): Candidate {
