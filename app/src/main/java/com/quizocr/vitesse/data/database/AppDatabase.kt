@@ -65,47 +65,71 @@ abstract class AppDatabase : RoomDatabase() {
         suspend fun populateDatabase(candidateDao: CandidateDao) {
             candidateDao.insertCandidate(
                 CandidateEntity(
-                    photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/17.jpg",
-                    firstName = "John",
-                    lastName = "Doe",
-                    phoneNumber = "1234567890",
-                    email = "john.c.calhoun@examplepetstore.com",
-                    dateOfBirth = LocalDate.of(1998, 5, 15),
-                    salaryEuros = 5000.0,
-                    notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eleifend volutpat scelerisque. Vestibulum tincidunt mauris purus, bibendum tincidunt est viverra non. Maecenas eget nunc diam. Cras enim urna, dictum at ex eget, pulvinar lobortis enim. Nullam nec turpis eros. Etiam consectetur nunc justo, ut rutrum ligula ornare a. Fusce augue velit, ornare quis imperdiet ut, vehicula venenatis ante. Nulla at accumsan velit. Nullam venenatis rhoncus augue eu imperdiet. Sed aliquet neque ac ante porta semper.",
-                    isFavorite = true,
-                    )
-            )
-
-            candidateDao.insertCandidate(
-                CandidateEntity(
-                    photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/72.jpg",
-                    firstName = "John",
-                    lastName = "Wick",
-                    phoneNumber = "1234567890",
-                    email = "john.c.calhoun@examplepetstore.com",
-                    dateOfBirth = LocalDate.of(1998, 5, 15),
-                    salaryEuros = 3500.50,
-                    notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eleifend volutpat scelerisque. Vestibulum tincidunt mauris purus, bibendum tincidunt est viverra non. Maecenas eget nunc diam. Cras enim urna, dictum at ex eget, pulvinar lobortis enim. Nullam nec turpis eros. Etiam consectetur nunc justo, ut rutrum ligula ornare a. Fusce augue velit, ornare quis imperdiet ut, vehicula venenatis ante. Nulla at accumsan velit. Nullam venenatis rhoncus augue eu imperdiet. Sed aliquet neque ac ante porta semper.",
-                    isFavorite = false,
+                    photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/23.jpg",
+                    firstName = "Sophie",
+                    lastName = "Martin",
+                    phoneNumber = "0612345678",
+                    email = "sophie.martin@example.com",
+                    dateOfBirth = LocalDate.of(1992, 3, 12),
+                    salaryEuros = 55000.0,
+                    notes = "Développeuse full-stack avec 8 ans d'expérience. Spécialisée en Kotlin et React. A travaillé sur plusieurs projets d'envergure dans le secteur bancaire. Excellentes compétences en architecture logicielle et méthodologies agiles. Recherche un poste avec plus de responsabilités techniques.",
+                    isFavorite = true
                 )
             )
 
             candidateDao.insertCandidate(
                 CandidateEntity(
-                    photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/19.jpg",
-                    firstName = "bob",
-                    lastName = "commando",
-                    phoneNumber = "1234567890",
-                    email = "john.c.calhoun@examplepetstore.com",
-                    dateOfBirth = LocalDate.of(1998, 5, 15),
-                    salaryEuros = 5000.0,
-                    notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eleifend volutpat scelerisque. Vestibulum tincidunt mauris purus, bibendum tincidunt est viverra non. Maecenas eget nunc diam. Cras enim urna, dictum at ex eget, pulvinar lobortis enim. Nullam nec turpis eros. Etiam consectetur nunc justo, ut rutrum ligula ornare a. Fusce augue velit, ornare quis imperdiet ut, vehicula venenatis ante. Nulla at accumsan velit. Nullam venenatis rhoncus augue eu imperdiet. Sed aliquet neque ac ante porta semper.",
-                    isFavorite = true,
+                    photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/42.jpg",
+                    firstName = "Lucas",
+                    lastName = "Dubois",
+                    phoneNumber = "0698765432",
+                    email = "lucas.dubois@example.com",
+                    dateOfBirth = LocalDate.of(2000, 11, 28),
+                    salaryEuros = 32000.0,
+                    notes = "Jeune designer UI/UX fraîchement diplômé d'une école de design. Portfolio impressionnant avec plusieurs projets personnels. Maîtrise Figma, Adobe XD et les principes de Material Design. Très motivé et créatif, cherche sa première expérience professionnelle.",
+                    isFavorite = false
+                )
+            )
+
+            candidateDao.insertCandidate(
+                CandidateEntity(
+                    photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/31.jpg",
+                    firstName = "Thomas",
+                    lastName = "Bernard",
+                    phoneNumber = "0687452310",
+                    email = "thomas.bernard@example.com",
+                    dateOfBirth = LocalDate.of(1995, 9, 5),
+                    salaryEuros = 45000.0,
+                    notes = "Développeur backend spécialisé en Java et Spring Boot. 5 ans d'expérience dans le développement d'APIs REST et microservices. Connaissances solides en Docker, Kubernetes et CI/CD. A participé à la migration d'une architecture monolithique vers des microservices. Préavis de 3 mois.",
+                    isFavorite = false
+                )
+            )
+            candidateDao.insertCandidate(
+                CandidateEntity(
+                    photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/8.jpg",
+                    firstName = "Marie",
+                    lastName = "Lefebvre",
+                    phoneNumber = "0645231789",
+                    email = "marie.lefebvre@example.com",
+                    dateOfBirth = LocalDate.of(1985, 7, 22),
+                    salaryEuros = 68000.0,
+                    notes = "Chef de projet digital avec 12 ans d'expérience. Certifiée PMP et Scrum Master. A piloté des projets de transformation digitale pour des grands comptes. Excellente communication et gestion d'équipes pluridisciplinaires de 10 à 20 personnes. Disponible immédiatement.",
+                    isFavorite = true
+                )
+            )
+            candidateDao.insertCandidate(
+                CandidateEntity(
+                    photoUri = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/15.jpg",
+                    firstName = "Camille",
+                    lastName = "Rousseau",
+                    phoneNumber = "0623456789",
+                    email = "camille.rousseau@example.com",
+                    dateOfBirth = LocalDate.of(1993, 1, 18),
+                    salaryEuros = 42000.0,
+                    notes = "Data analyst avec une forte appétence pour le machine learning. Master en data science. Expérience avec Python, SQL, PowerBI et Tableau. A développé des modèles prédictifs pour optimiser les campagnes marketing. Bilingue français-anglais. Peut commencer dans 1 mois.",
+                    isFavorite = true
                 )
             )
         }
     }
-
-
 }
