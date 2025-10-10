@@ -165,7 +165,7 @@ class ResumeCandidateFragment : Fragment() {
         val salaryText = getString(R.string.expected_salary_pounds)
         binding.candidateSalary.text = "$salaryFormat €"
 
-        binding.candidateSalaryPounds.text = "$salaryText $salaryPounds"
+        binding.candidateSalaryPounds.text = "$salaryText ${salaryPounds?:"0"}"
 
         val age = calculateAgeInYears(candidate.dateOfBirth)
         val dob = formatDateShort(candidate.dateOfBirth)

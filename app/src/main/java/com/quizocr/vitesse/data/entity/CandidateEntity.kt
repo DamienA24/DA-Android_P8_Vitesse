@@ -13,7 +13,7 @@ data class CandidateEntity(
     val id: Int = 0,
 
     @ColumnInfo(name = "photo_uri")
-    val photoUri: String?,
+    val photoUri: String = "",
 
     @ColumnInfo(name = "first_name")
     val firstName: String,
@@ -31,10 +31,10 @@ data class CandidateEntity(
     val dateOfBirth: LocalDate,
 
     @ColumnInfo(name = "salary_euros")
-    val salaryEuros: Double,
+    val salaryEuros: Double = 0.0,
 
     @ColumnInfo(name = "notes")
-    val notes: String?,
+    val notes: String = "",
 
     @ColumnInfo(name = "is_favorite")
     val isFavorite: Boolean = false,

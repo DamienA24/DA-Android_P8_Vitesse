@@ -1,5 +1,6 @@
 package com.quizocr.vitesse.ui.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.quizocr.vitesse.data.repository.DataResult
@@ -70,7 +71,8 @@ class HomeViewModel @Inject constructor(private val getAllCandidates: GetAllCand
             .onEach { result: DataResult<List<CandidateSummary>> ->
                 when (result) {
                     is DataResult.Success -> {
-                        _sourceCandidates.value = result.data
+                        val candidates = result.data.sortedBy { it.lastName.lowercase() }
+                        _sourceCandidates.value = candidates
                         _uiState.update { it.copy(isLoading = false, errorMessage = null) }
                     }
                     is DataResult.Error -> {

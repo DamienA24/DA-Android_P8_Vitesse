@@ -5,14 +5,14 @@ import java.time.LocalDate
 
 data class Candidate(
     val id: Int = 0,
-    val photoUri: String? = null,
+    val photoUri: String,
     val firstName: String,
     val lastName: String,
     val phoneNumber: String,
     val email: String,
     val dateOfBirth: LocalDate,
     val salaryEuros: Double = 0.0,
-    val notes: String? = null,
+    val notes: String = "",
     val isFavorite: Boolean = false,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()

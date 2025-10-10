@@ -1,11 +1,9 @@
 package com.quizocr.vitesse.ui.addEditCandidate
 
-import android.icu.text.NumberFormat
 import android.icu.text.SimpleDateFormat
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -283,9 +281,9 @@ class AddEditCandidateFragment : Fragment() {
                 phoneNumber = phone,
                 email = email,
                 dateOfBirth = dateOfBirthToSave,
-                salary = salaryDouble,
+                salary = salaryDouble?:0.0,
                 notes = notes,
-                photoUri = photoUriString
+                photoUri = photoUriString?:""
             )
 
         }

@@ -70,9 +70,9 @@ class AddEditCandidateViewModel @Inject constructor(
         phoneNumber: String,
         email: String,
         dateOfBirth: LocalDate,
-        salary: Double?,
-        notes: String?,
-        photoUri: String?
+        salary: Double,
+        notes: String,
+        photoUri: String
     ) {
         viewModelScope.launch {
             _uiState.update { it.copy(isSaving = true, saveSuccess = false, errorMessage = null) }
@@ -84,11 +84,11 @@ class AddEditCandidateViewModel @Inject constructor(
                     phoneNumber = phoneNumber,
                     email = email,
                     dateOfBirth = dateOfBirth,
-                    salaryEuros = salary ?: 0.0,
+                    salaryEuros = salary,
                     notes = notes,
                     photoUri = photoUri,
                     updatedAt = System.currentTimeMillis()
-                ) ?: return@launch // Should not happen if candidate is loaded for an edit
+                ) ?: return@launch
             } else {
                 Candidate(
                     firstName = firstName,
@@ -96,7 +96,7 @@ class AddEditCandidateViewModel @Inject constructor(
                     phoneNumber = phoneNumber,
                     email = email,
                     dateOfBirth = dateOfBirth,
-                    salaryEuros = salary ?: 0.0,
+                    salaryEuros = salary,
                     notes = notes,
                     photoUri = photoUri
                 )

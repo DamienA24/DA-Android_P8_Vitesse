@@ -2,7 +2,6 @@ package com.quizocr.vitesse.data.database
 
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.room.Database
 import androidx.room.Room
@@ -13,9 +12,7 @@ import com.quizocr.vitesse.data.dao.CandidateDao
 import com.quizocr.vitesse.data.entity.CandidateEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.time.Instant
 import java.time.LocalDate
-import java.time.temporal.ChronoUnit
 
 @Database(
     entities = [CandidateEntity::class],
