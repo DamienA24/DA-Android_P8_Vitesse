@@ -23,7 +23,7 @@ interface CandidateDao {
     @Delete
     suspend fun deleteCandidate(candidate: CandidateEntity)
 
-    @Query("SELECT id, photo_uri, last_name, first_name, is_favorite, notes FROM candidates ORDER BY last_name ASC, first_name ASC")
+    @Query("SELECT id, photo_uri, last_name, first_name, is_favorite, notes FROM candidates ORDER BY last_name ASC")
     fun getAllCandidates(): Flow<List<CandidateSummary>>
 
     @Query("SELECT * FROM candidates WHERE id = :id")
